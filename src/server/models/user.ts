@@ -20,15 +20,15 @@ export class User extends Model implements IUser {
   public devices?: UserDevice[];
   public socials?: UserSocial[];
 
-  get fullName(): string {
+  public get fullName(): string {
     return `${this.firstName} ${this.lastName}`.trim();
   }
 
-  static get tableName(): string {
+  public static get tableName(): string {
     return 'User';
   }
 
-  static get relationMappings(): any {
+  public static get relationMappings(): any {
     return {
       devices: {
         relation: Model.HasManyRelation,
@@ -50,7 +50,7 @@ export class User extends Model implements IUser {
     };
   }
 
-  static get virtualAttributes(): string[] {
+  public static get virtualAttributes(): string[] {
     return ['fullName'];
   }
 

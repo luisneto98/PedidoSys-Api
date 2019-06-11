@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const inquirer = require('inquirer');
 const ora = require('ora');
@@ -39,7 +40,7 @@ async function awaitWarning() {
 
 async function checkYarn() {
   await execCommand('yarn -v').catch(() => {
-    throw new Error('Yarn is required')
+    throw new Error('Yarn is required');
   });
 }
 
@@ -61,7 +62,7 @@ async function askParams(answers = {}) {
   }]);
 
   if (!params.confirmed) {
-    console.log('---- Responda novamente:')
+    console.log('---- Responda novamente:');
     return askParams(params);
   }
 
@@ -110,7 +111,7 @@ async function replaceContent(file, replacers) {
 }
 
 async function removePackages() {
-  await execCommand(`yarn remove inquirer ora rimraf`);
+  await execCommand('yarn remove inquirer ora rimraf');
 }
 
 async function resetGit(params) {
@@ -124,7 +125,7 @@ async function resetGit(params) {
     await execCommand(`git remote add origin ${params.repository}`);
   }
 
-  await execCommand('git add . && git commit -am "initial"')
+  await execCommand('git add . && git commit -am "initial"');
 }
 
 async function selfDestruction() {

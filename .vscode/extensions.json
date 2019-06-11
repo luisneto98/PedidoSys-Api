@@ -4,8 +4,8 @@
     "EditorConfig.editorconfig",
     "christian-kohler.npm-intellisense",
     "christian-kohler.path-intellisense",
-    "eg2.tslint",
     "rbbit.typescript-hero",
-    "ms-vscode.node-debug2"
+    "ms-vscode.node-debug2",
+    "dbaeumer.vscode-eslint"
   ]
 }

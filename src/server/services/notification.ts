@@ -1,10 +1,10 @@
 import axios, { AxiosInstance } from 'axios';
 import { UserDevice } from 'models/userDevice';
-import { firebaseKey } from 'settings';
+import { FIREBASE_KEY } from 'settings';
 
 const firebase: AxiosInstance = axios.create({
   baseURL: 'https://fcm.googleapis.com/fcm',
-  headers: { Authorization: `key=${firebaseKey}` }
+  headers: { Authorization: `key=${FIREBASE_KEY}` }
 });
 
 export async function sendByUser(userId: number, title: string, body: string, data: any): Promise<any> {
@@ -21,6 +21,7 @@ export async function sendAll(title: string, body: string, data: any): Promise<a
 async function send(title: string, body: string, data: any, to?: string, registrationIds?: string[]): Promise<any> {
   return await firebase.post('/send', {
     to,
+    // eslint-disable-next-line camelcase
     registration_ids: registrationIds,
     notification: {
       title,

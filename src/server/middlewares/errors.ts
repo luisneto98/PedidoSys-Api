@@ -2,15 +2,15 @@ import { NextFunction, Request, Response } from 'express';
 
 import { ServiceError } from '../errors/service';
 import * as logService from '../services/log';
-import { isDevelopment } from '../settings';
+import { IS_DEV } from '../settings';
 
-export function notFound(req: Request, res: Response, next: NextFunction): any {
+export function notFound(req: Request, res: Response): any {
   return res.status(404).json('Nenhum rota encontrada');
 }
 
 export function parser(err: any, req: Request, res: Response, next: NextFunction): any {
   if (err.validationError) {
-    if (isDevelopment) {
+    if (IS_DEV) {
       console.log(req.body);
       console.log(err.message);
     }
@@ -34,6 +34,7 @@ export function parser(err: any, req: Request, res: Response, next: NextFunction
   next(err);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function developmentError(err: any, req: Request, res: Response, next: NextFunction): any {
   console.error(err.status || 500);
   console.error(err.message);
@@ -51,6 +52,7 @@ export function developmentError(err: any, req: Request, res: Response, next: Ne
   });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function productionError(err: any, req: Request, res: Response, next: NextFunction): Promise<void> {
   err.status = err.status || 500;
 

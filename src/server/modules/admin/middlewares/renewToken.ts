@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import * as tokenService from 'services/token';
-import { auth } from 'settings';
+import { AUTH } from 'settings';
 
 export async function autoRenewToken(req: Request, res: Response, next: NextFunction): Promise<any> {
   if (req.method === 'OPTIONS' || !req.user) {
@@ -10,7 +10,7 @@ export async function autoRenewToken(req: Request, res: Response, next: NextFunc
   const now = Math.floor(Date.now() / 1000) * 1;
   const diff = (<any>req.user).exp - now;
 
-  if (diff <= (auth.timeout * 0.6)) {
+  if (diff <= (AUTH.timeout * 0.6)) {
     const token = await tokenService.renewUserToken(req.user);
     res.setHeader('X-Token', token);
   }

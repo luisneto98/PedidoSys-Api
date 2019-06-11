@@ -1,13 +1,6 @@
-import 'source-map-support/register';
-
-import { expect, use } from 'chai';
-import * as chaiAsPromise from 'chai-as-promised';
-import * as joi from 'joi';
 import * as _ from 'lodash';
 
 import { validate } from './login';
-
-use(chaiAsPromise);
 
 describe('admin/validators/login', () => {
   const data = {
@@ -15,31 +8,36 @@ describe('admin/validators/login', () => {
     password: 'senha'
   };
 
-  it('should return valid for a full object', () => {
+  it('should return valid for a full object', async () => {
     const model = data;
-    return expect(validate(model)).to.eventually.be.fulfilled as any;
+    return expect(validate(model)).toReject();
   });
 
-  it('should return invalid when email is empty', () => {
+  it('should return invalid when email is empty', async () => {
     const model = _.clone(data);
     delete model.email;
-    return expect(validate(model)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('email');
-      expect(data.message[0].type).to.equal('any.required');
-    });
+    const promise = validate(model);
+    await expect(promise).toReject();
+
+    const result = await promise.catch(err => err);
+    expect(result.validationError).toBeTrue();
+    expect(result.message).toHaveLength(1);
+    expect(result.message[0].path).toEqual('email');
+    expect(result.message[0].type).toEqual('any.required');
   });
 
-  it('should return invalid when password is empty', () => {
+  it('should return invalid when password is empty', async () => {
     const model = _.clone(data);
     delete model.password;
-    return expect(validate(model)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('password');
-      expect(data.message[0].type).to.equal('any.required');
-    });
+
+    const promise = validate(model);
+    await expect(promise).toReject();
+
+    const result = await promise.catch(err => err);
+    expect(result.validationError).toBeTrue();
+    expect(result.message).toHaveLength(1);
+    expect(result.message[0].path).toEqual('password');
+    expect(result.message[0].type).toEqual('any.required');
   });
 
 });

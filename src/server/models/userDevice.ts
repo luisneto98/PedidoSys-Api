@@ -12,11 +12,11 @@ export class UserDevice extends Model implements IUserDevice {
 
   public user: User;
 
-  static get tableName(): string {
+  public static get tableName(): string {
     return 'UserDevice';
   }
 
-  static get relationMappings(): any {
+  public static get relationMappings(): any {
     return {
 
       user: {

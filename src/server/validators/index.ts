@@ -7,6 +7,7 @@ function isEmpty(value: any): boolean {
   return value === null || value === undefined || value === '';
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function coerce(value: any, state: any, options: any): any {
   return value === '' ? null : value;
 }

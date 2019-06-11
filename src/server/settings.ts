@@ -1,15 +1,15 @@
-export const dns = (process.env.DNS || '').trim().replace(/\/$/gi, '');
-export const sentryKey = process.env.SENTRY_KEY;
-export const port = process.env.NODE_PORT || 3000;
-export const env = (process.env.NODE_ENV || 'development').trim();
-export const bcryptSaltFactor = env === 'test' ? 4 : 11;
+export const SITE_DNS = (process.env.DNS || '').trim().replace(/\/$/gi, '');
+export const SENTRY_KEY = process.env.SENTRY_KEY;
+export const PORT = process.env.NODE_PORT || 3000;
+export const ENV = (process.env.NODE_ENV || 'development').trim();
+export const BCRYPT_SALT_FACTOR = ENV === 'test' ? 4 : 11;
 
-export const isProduction = env === 'production';
-export const isDevelopment = env === 'development';
-export const isTest = env === 'test';
+export const IS_PROD = ENV === 'production';
+export const IS_DEV = ENV === 'development';
+export const IS_TEST = ENV === 'test';
 
 /* tslint:disable */
-export const auth = {
+export const AUTH = {
   timeout: 480, // 8 hour
   appTimeout: 1440, // 24 hours
   resetPasswordTimeout: 1 * 60 * 24, //2 days
@@ -17,7 +17,7 @@ export const auth = {
 };
 /* tslint:enable */
 
-export const mail = {
+export const MAIL = {
   from: process.env.MAILGUN_FROM,
   credentials: {
     apiKey: process.env.MAILGUN_APIKEY,
@@ -25,13 +25,13 @@ export const mail = {
   }
 };
 
-export const facebook = {
+export const FACEBOOK = {
   appId: '231990960983128',
   appSecret: '4fb18fa3571fd8a0312d1c3a3861c904',
   scopes: ['email']
 };
 
-export const google = {
+export const GOOGLE = {
   apiKey: 'AIzaSyB7r8ZMtM4s-WAvNT7z3mi2UB8W1LSogpk',
   clientId: '342330085837-hdpamasp70luntomk266nmd0irqui7jf.apps.googleusercontent.com',
   clientSecret: 'pv11mTH0_-tBQHuuhO9b0O46',
@@ -42,4 +42,4 @@ export const google = {
   ]
 };
 
-export const firebaseKey = process.env.FIREBASE_KEY;
+export const FIREBASE_KEY = process.env.FIREBASE_KEY;

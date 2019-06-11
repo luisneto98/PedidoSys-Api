@@ -1,9 +1,10 @@
+/* eslint-disable camelcase */
 import * as fb from 'fb';
 import { ISocialUserInfo } from 'interfaces/socialUserInfo';
 import * as urlService from 'services/url';
 import * as settings from 'settings';
 
-const fields = `id,name,picture.type(large),email`;
+const fields = 'id,name,picture.type(large),email';
 
 export async function getUserInfo(accessToken: string): Promise<ISocialUserInfo> {
   return new Promise<ISocialUserInfo>((resolve, reject) => {
@@ -27,8 +28,8 @@ export async function getUserInfo(accessToken: string): Promise<ISocialUserInfo>
 
 export async function loginUrl(): Promise<string> {
   return (<any>fb).getLoginUrl({
-    client_id: settings.facebook.appId,
-    client_secret: settings.facebook.appSecret,
+    client_id: settings.FACEBOOK.appId,
+    client_secret: settings.FACEBOOK.appSecret,
     redirect_uri: urlService.facebookCallback()
   });
 }
@@ -36,10 +37,10 @@ export async function loginUrl(): Promise<string> {
 export async function getAccessToken(code: string): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     fb.api('oauth/access_token', {
-      client_id: settings.facebook.appId,
-      client_secret: settings.facebook.appSecret,
+      client_id: settings.FACEBOOK.appId,
+      client_secret: settings.FACEBOOK.appSecret,
       redirect_uri: urlService.facebookCallback(),
-      scope: settings.facebook.scopes.join(','),
+      scope: settings.FACEBOOK.scopes.join(','),
       code
     }, (response: any) => {
       if (!response || response.error) return reject(apiError(response));

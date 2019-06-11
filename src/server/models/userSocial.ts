@@ -10,11 +10,11 @@ export class UserSocial extends Model implements IUserSocial {
 
   public user: User;
 
-  static get tableName(): string {
+  public static get tableName(): string {
     return 'UserSocial';
   }
 
-  static get relationMappings(): any {
+  public static get relationMappings(): any {
     return {
 
       user: {

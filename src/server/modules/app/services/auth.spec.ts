@@ -1,14 +1,10 @@
-import 'source-map-support/register';
+import * as joi from 'joi';
 
-import { expect, use } from 'chai';
-import * as chaiAsPromise from 'chai-as-promised';
-
-import { ILoginResult } from './auth';
 import * as service from './auth';
-
-use(chaiAsPromise);
+import * as db from 'db';
 
 describe('app/services/auth', () => {
+  let connection: ReturnType<typeof db.connect>;
   const login = {
     email: 'admin@waproject.com.br',
     password: 'senha@123',
@@ -16,38 +12,53 @@ describe('app/services/auth', () => {
     deviceName: 'test-console'
   };
 
-  it('should return token for a valid user when try to login', () => {
-    return expect(service.login(login)).to.be.eventually.fulfilled.then((token: ILoginResult) => {
-      expect(token.accessToken).to.be.a('string');
-      expect(token.refreshToken).to.be.a('string');
-    });
+  beforeAll(async () => connection = await db.connectAndMigrate());
+  afterAll(async () => await connection.destroy());
+
+  it('should return token for a valid user when try to login', async () => {
+    const promise = service.login(login);
+    expect(promise).toResolve();
+
+    const token = await promise;
+    expect(token.accessToken).toBeString();
+    expect(token.refreshToken).toBeString();
   });
 
-  it('should throw user-not-found when email is invalid when try to login', () => {
-    return expect(service.login({ ...login, email: 'nothing@email.com' })).to.be.rejected.then((error: Error) => {
-      expect(error.message).to.be.equal('user-not-found');
-    });
+  it('should throw user-not-found when email is invalid when try to login', async () => {
+    const promise = service.login({ ...login, email: 'nothing@email.com' });
+    await expect(promise).toReject();
+
+    const err: joi.CustomValidationError = await promise.catch(err => err);
+    expect(err.message).toEqual('user-not-found');
   });
 
-  it('should throw invalid-password when password is invalid when try to login', () => {
-    return expect(service.login({ ...login, password: '123' })).to.be.rejected.then((error: Error) => {
-      expect(error.message).to.be.equal('invalid-password');
-    });
+  it('should throw invalid-password when password is invalid when try to login', async () => {
+    const promise = service.login({ ...login, password: 'invalid' });
+    await expect(promise).toReject();
+
+    const err: joi.CustomValidationError = await promise.catch(err => err);
+    expect(err.message).toEqual('invalid-password');
   });
 
-  it('should update divice and return tokens', () => {
-    return expect(service.login(login)).to.be.fulfilled.then((tokens: ILoginResult) => {
-      expect(tokens.accessToken).to.be.not.empty;
-      expect(tokens.refreshToken).to.be.not.empty;
-    });
+  it('should update divice and return tokens', async () => {
+    const promise = service.login(login);
+    expect(promise).toResolve();
+
+    const tokens = await promise;
+    expect(tokens.accessToken).not.toBeEmpty();
+    expect(tokens.refreshToken).not.toBeEmpty();
   });
 
-  it('should generate a new access token', () => {
-    return expect(service.login(login)).to.be.fulfilled.then((tokens: ILoginResult) => {
-      return expect(service.generateAccessToken(tokens.refreshToken)).to.be.fulfilled as any;
-    }).then((accessToken: string) => {
-      expect(accessToken).to.not.be.empty;
-    });
+  it('should generate a new access token', async () => {
+    const loginPromise = service.login(login);
+    expect(loginPromise).toResolve();
+    const tokens = await loginPromise;
+
+    const tokenPromise = service.generateAccessToken(tokens.refreshToken);
+    expect(tokenPromise).toResolve();
+    const accessToken = await tokenPromise;
+
+    expect(accessToken).not.toBeEmpty();
   });
 
 });

@@ -8,8 +8,8 @@ import * as urlService from '../url';
 
 let mailgun: ReturnType<typeof mailgunApi>;
 
-if (!settings.isTest && settings.mail.credentials.apiKey) {
-  mailgun = mailgunApi(settings.mail.credentials);
+if (!settings.IS_TEST && settings.MAIL.credentials.apiKey) {
+  mailgun = mailgunApi(settings.MAIL.credentials);
 }
 
 export interface IMail {
@@ -28,14 +28,14 @@ export async function send(to: string, subject: string, template: string, data: 
   data = setDefaultVariables(data);
 
   const html = await renderTemplate(template, data);
-  const mail: IMail = { from: settings.mail.from, to, subject, html };
+  const mail: IMail = { from: settings.MAIL.from, to, subject, html };
 
-  if (settings.isTest) {
+  if (settings.IS_TEST) {
     (<any>mail).template = template;
     return mail;
   }
 
-  if (settings.isDevelopment) {
+  if (settings.IS_DEV) {
     await outputFile(mail);
     return mail;
   }
@@ -65,7 +65,7 @@ async function outputFile(mail: IMail): Promise<IMail> {
 async function renderTemplate(template: string, data: any): Promise<string> {
   const html = pug.renderFile(`${__dirname}/templates/${template}.pug`, {
     ...data,
-    pretty: settings.isDevelopment
+    pretty: settings.IS_DEV
   });
 
   return await inlineCss(html, { url: urlService.home() || 'no-url' });

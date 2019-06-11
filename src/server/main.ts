@@ -13,12 +13,12 @@ import * as errors from './middlewares/errors';
 import { router as modulesRouter } from './modules/router';
 import * as settings from './settings';
 
-db.connect();
+const connection = db.connect();
 
 const app = express();
 
-if (settings.isProduction) {
-    app.use(timeout('5s'));
+if (settings.IS_PROD) {
+  app.use(timeout('5s'));
 }
 
 app.use(allowCors);
@@ -33,12 +33,28 @@ app.use(errors.notFound);
 app.use(errors.parser);
 
 app.use(
-    settings.isDevelopment ?
-        errors.developmentError :
-        errors.productionError
+  settings.IS_DEV ?
+    errors.developmentError :
+    errors.productionError
 );
 
-app.listen(settings.port, () => console.log(`server started: PORT: ${settings.port} | ENV: ${settings.env}`));
+const server = app.listen(settings.PORT, () => console.log(`server started: PORT: ${settings.PORT} | ENV: ${settings.ENV}`));
 
-process.on('unhandledRejection', () => { /* ignore */ });
-process.on('SIGINT', () => process.exit());
+process.on('unhandledRejection', (reason: any, p: any) => {
+  console.error('unhandledRejection');
+  console.error(reason);
+  console.error(p);
+});
+
+process.on('SIGTERM', async () => {
+  console.error('SIGMTERM - fechando servidor');
+  await new Promise(resolve => server.close(() => resolve()));
+  console.error('SIGMTERM - servidor fechado');
+
+  console.error('SIGMTERM - mongoose disconect');
+  await connection.destroy();
+  console.error('SIGMTERM - mongoose disconect success');
+
+  console.error('SIGMTERM - finalizando processo');
+  process.exit(0);
+});
