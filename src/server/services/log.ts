@@ -1,17 +1,15 @@
-import * as raven from 'raven';
-import * as settings from 'settings';
+import * as sentry from '@sentry/node';
+import { SENTRY_KEY, ENV, IS_DEV } from 'settings';
 
-if (settings.isProduction) {
-  raven.config(settings.sentryKey, {
-    environment: settings.env
-  }).install();
-}
+sentry.init({
+  dsn: SENTRY_KEY,
+  environment: ENV
+});
 
 export function exception(err: any): void {
-  if (settings.isProduction) {
-    raven.captureException(err);
-    return;
+  if (IS_DEV) {
+    console.error(err);
   }
 
-  console.error(err);
+  sentry.captureException(err);
 }

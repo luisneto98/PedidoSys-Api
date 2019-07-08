@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { OAuth2Client } from 'google-auth-library';
 import * as googleApi from 'googleapis';
 import { ISocialUserInfo } from 'interfaces/socialUserInfo';
@@ -36,7 +37,7 @@ export async function loginUrl(): Promise<string> {
   const oauth2Client = getOAuth2Client();
   return oauth2Client.generateAuthUrl({
     access_type: 'offline',
-    scope: settings.google.scopes
+    scope: settings.GOOGLE.scopes
   });
 }
 
@@ -70,8 +71,8 @@ function apiError(response: any): Error {
 
 function getOAuth2Client(accessToken: string = null): OAuth2Client {
   const oauth2Client = new OAuth2Client(
-    settings.google.clientId,
-    settings.google.clientSecret,
+    settings.GOOGLE.clientId,
+    settings.GOOGLE.clientSecret,
     urlService.googleCallback()
   );
 

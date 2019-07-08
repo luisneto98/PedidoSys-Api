@@ -17,7 +17,7 @@ export function authRequired(roles: enRoles | enRoles[] = null): any {
       return next();
     }
 
-    roles = _.flattenDeep([roles, ['sysAdmin', 'admin']]) as enRoles[];
+    roles = _.flattenDeep([roles, ['sysAdmin', 'admin'] as any]) as enRoles[];
 
     const isAuthorized = _.intersection(roles, req.user.roles).length > 0;
     if (!isAuthorized) {

@@ -1,16 +1,11 @@
-import 'source-map-support/register';
-
-import { expect, use } from 'chai';
-import * as chaiAsPromise from 'chai-as-promised';
 import { IUser } from 'interfaces/models/user';
 import { IUserToken } from 'interfaces/tokens/user';
-import { User } from 'models/user';
+import * as db from 'db';
 
 import * as service from './profile';
 
-use(chaiAsPromise);
-
 describe('app/services/profile', () => {
+  let connection: ReturnType<typeof db.connect>;
   const userToken: IUserToken = {
     id: 1,
     email: 'danielprado.ad@gmail.com',
@@ -26,13 +21,18 @@ describe('app/services/profile', () => {
     roles: []
   };
 
-  it('should update user profile', () => {
-    return expect(service.save(user, userToken)).to.be.eventually.fulfilled.then((user: User) => {
-      expect(user).to.be.not.undefined;
-      expect(user.firstName).to.be.equal(user.firstName);
-      expect(user.lastName).to.be.equal(user.lastName);
-      expect(user.email).to.be.equal(user.email);
-    });
+  beforeAll(async () => connection = await db.connectAndMigrate());
+  afterAll(async () => await connection.destroy());
+
+  it('should update user profile', async () => {
+    const promise = service.save(user, userToken);
+    expect(promise).toResolve();
+    const result = await promise;
+
+    expect(result).not.toBeUndefined();
+    expect(result.firstName).toEqual(user.firstName);
+    expect(result.lastName).toEqual(user.lastName);
+    expect(result.email).toEqual(user.email);
   });
 
 });

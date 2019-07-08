@@ -2,10 +2,10 @@ import * as faker from 'faker/locale/pt_BR';
 import * as Knex from 'knex';
 
 import { IUser } from '../../server/interfaces/models/user';
-import { isDevelopment } from '../../server/settings';
+import { IS_DEV } from '../../server/settings';
 
 export async function seed(knex: Knex): Promise<void> {
-  if (!isDevelopment) return;
+  if (!IS_DEV) return;
 
   const users = await knex
     .count()

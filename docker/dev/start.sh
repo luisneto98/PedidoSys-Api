@@ -7,6 +7,6 @@
   echo 'Database ready!'!;
 "
 
-npm run compile:migrations
-npm run migrate
+# npm run compile:migrations
+# npm run migrate
 npm run dev

@@ -7,7 +7,7 @@ import { IUserToken } from 'interfaces/tokens/user';
 import { User } from 'models/user';
 import { enTokenType } from 'services/token';
 import { ServiceError } from 'errors/service';
-import { isDevelopment } from 'settings';
+import { IS_DEV } from 'settings';
 import { ISocialUserInfo } from 'interfaces/socialUserInfo';
 import { IUserSocial } from 'interfaces/models/userSocial';
 
@@ -49,7 +49,7 @@ export async function sendResetPassword(email: string): Promise<void> {
   const token = await tokenService.resetPassword(user);
   await mailService.sendResetPassword(user, token);
 
-  if (isDevelopment) {
+  if (IS_DEV) {
     console.log(`*******\nRESET TOKEN: ${token}\n*******`);
   }
 }

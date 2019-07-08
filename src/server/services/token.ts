@@ -5,7 +5,7 @@ import { IResetPasswordToken } from 'interfaces/tokens/resetPassword';
 import { IUserToken } from 'interfaces/tokens/user';
 import * as jwt from 'jsonwebtoken';
 import * as _ from 'lodash';
-import { auth } from 'settings';
+import { AUTH } from 'settings';
 
 export enum enTokenType {
   userToken = 0,
@@ -22,7 +22,7 @@ export async function userToken(user: IUser, forApp: boolean = false): Promise<s
     roles: user.roles,
   };
 
-  return await sign(tokenData, enTokenType.userToken, forApp ? auth.appTimeout : auth.timeout);
+  return await sign(tokenData, enTokenType.userToken, forApp ? AUTH.appTimeout : AUTH.timeout);
 }
 
 export async function refreshToken(userId: number, deviceId: string, uuid: string): Promise<string> {
@@ -32,7 +32,7 @@ export async function refreshToken(userId: number, deviceId: string, uuid: strin
 
 export async function renewUserToken(userToken: IUserToken): Promise<string> {
   userToken = _.cloneDeep(userToken);
-  return await sign(userToken, enTokenType.userToken, auth.timeout);
+  return await sign(userToken, enTokenType.userToken, AUTH.timeout);
 }
 
 export async function resetPassword(user: IUser): Promise<string> {
@@ -42,12 +42,12 @@ export async function resetPassword(user: IUser): Promise<string> {
     email: user.email
   };
 
-  return await sign(tokenData, enTokenType.resetPassword, auth.resetPasswordTimeout);
+  return await sign(tokenData, enTokenType.resetPassword, AUTH.resetPasswordTimeout);
 }
 
 export async function verify<T>(token: string, type: enTokenType): Promise<T> {
   return new Promise<T>((resolve, reject) => {
-    jwt.verify(token, auth.secret, (err: any, decoded: any) => {
+    jwt.verify(token, AUTH.secret, (err: any, decoded: any) => {
       if (err || !decoded || decoded.type !== type) {
         return reject(resolveVerifyError(err));
       }
@@ -65,7 +65,7 @@ async function sign(tokenData: any, type: enTokenType, expiration: number = null
       (<any>tokenData).exp = expirationDate(expiration);
     }
 
-    resolve(jwt.sign(tokenData, auth.secret));
+    resolve(jwt.sign(tokenData, AUTH.secret));
   });
 }
 

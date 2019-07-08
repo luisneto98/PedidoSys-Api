@@ -1,14 +1,8 @@
-import 'source-map-support/register';
-
-import { expect, use } from 'chai';
-import * as chaiAsPromise from 'chai-as-promised';
 import { IUser } from 'interfaces/models/user';
 import * as joi from 'joi';
 import * as lodash from 'lodash';
 
 import { validate } from './profile';
-
-use(chaiAsPromise);
 
 describe('app/validators/user', () => {
   const data: Partial<IUser> = {
@@ -18,100 +12,124 @@ describe('app/validators/user', () => {
     email: 'email@test.com'
   };
 
-  it('should return valid for a minimun object', () => {
+  it('should return valid for a minimun object', async () => {
     const model = { firstName: data.firstName, email: data.email };
-    return expect(validate(model)).to.eventually.be.fulfilled as any;
+    return expect(validate(model)).toResolve();
   });
 
-  it('should return valid for a full object', () => {
+  it('should return valid for a full object', async () => {
     const model = data;
-    return expect(validate(model)).to.eventually.be.fulfilled as any;
+    return expect(validate(model)).toResolve();
   });
 
-  it('should return invalid when id is less than 1', () => {
+  it('should return invalid when id is less than 1', async () => {
     const model = lodash.clone(data);
     model.id = 0;
-    return expect(validate(model)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('id');
-      expect(data.message[0].type).to.equal('number.min');
-    });
+
+    const promise = validate(model);
+    await expect(promise).toReject();
+
+    const err: joi.CustomValidationError = await promise.catch(err => err);
+    expect(err.validationError).toBeTrue();
+    expect(err.message).toHaveLength(1);
+    expect(err.message[0].path).toEqual('id');
+    expect(err.message[0].type).toEqual('number.min');
   });
 
-  it('should return invalid when firstName is empty', () => {
+  it('should return invalid when firstName is empty', async () => {
     const model = lodash.clone(data);
     delete model.firstName;
-    return expect(validate(model)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('firstName');
-      expect(data.message[0].type).to.equal('any.required');
-    });
+
+    const promise = validate(model);
+    await expect(promise).toReject();
+
+    const err: joi.CustomValidationError = await promise.catch(err => err);
+    expect(err.validationError).toBeTrue();
+    expect(err.message).toHaveLength(1);
+    expect(err.message[0].path).toEqual('firstName');
+    expect(err.message[0].type).toEqual('any.required');
   });
 
-  it('should return invalid when firstName length is less than 3', () => {
+  it('should return invalid when firstName length is less than 3', async () => {
     const model = lodash.clone(data);
     model.firstName = 'te';
-    return expect(validate(model)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('firstName');
-      expect(data.message[0].type).to.equal('string.min');
-    });
+
+    const promise = validate(model);
+    await expect(promise).toReject();
+
+    const err: joi.CustomValidationError = await promise.catch(err => err);
+    expect(err.validationError).toBeTrue();
+    expect(err.message).toHaveLength(1);
+    expect(err.message[0].path).toEqual('firstName');
+    expect(err.message[0].type).toEqual('string.min');
   });
 
-  it('should return invalid when firstName length is greather than 50', () => {
+  it('should return invalid when firstName length is greather than 50', async () => {
     const model = lodash.clone(data);
     model.firstName = new Array(52).join('a');
-    return expect(validate(model)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('firstName');
-      expect(data.message[0].type).to.equal('string.max');
-    });
+
+    const promise = validate(model);
+    await expect(promise).toReject();
+
+    const err: joi.CustomValidationError = await promise.catch(err => err);
+    expect(err.validationError).toBeTrue();
+    expect(err.message).toHaveLength(1);
+    expect(err.message[0].path).toEqual('firstName');
+    expect(err.message[0].type).toEqual('string.max');
   });
 
-  it('should return invalid when lastName length is greather than 50', () => {
+  it('should return invalid when lastName length is greather than 50', async () => {
     const model = lodash.clone(data);
     model.lastName = new Array(52).join('a');
-    return expect(validate(model)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('lastName');
-      expect(data.message[0].type).to.equal('string.max');
-    });
+
+    const promise = validate(model);
+    await expect(promise).toReject();
+
+    const err: joi.CustomValidationError = await promise.catch(err => err);
+    expect(err.validationError).toBeTrue();
+    expect(err.message).toHaveLength(1);
+    expect(err.message[0].path).toEqual('lastName');
+    expect(err.message[0].type).toEqual('string.max');
   });
 
-  it('should return invalid when email is empty', () => {
+  it('should return invalid when email is empty', async () => {
     const model = lodash.clone(data);
     delete model.email;
-    return expect(validate(model)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('email');
-      expect(data.message[0].type).to.equal('any.required');
-    });
+
+    const promise = validate(model);
+    await expect(promise).toReject();
+
+    const err: joi.CustomValidationError = await promise.catch(err => err);
+    expect(err.validationError).toBeTrue();
+    expect(err.message).toHaveLength(1);
+    expect(err.message[0].path).toEqual('email');
+    expect(err.message[0].type).toEqual('any.required');
   });
 
-  it('should return invalid when email is invalid', () => {
+  it('should return invalid when email is invalid', async () => {
     const model = lodash.clone(data);
     model.email = 'invalid email address';
-    return expect(validate(model)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('email');
-      expect(data.message[0].type).to.equal('string.email');
-    });
+
+    const promise = validate(model);
+    await expect(promise).toReject();
+
+    const err: joi.CustomValidationError = await promise.catch(err => err);
+    expect(err.validationError).toBeTrue();
+    expect(err.message).toHaveLength(1);
+    expect(err.message[0].path).toEqual('email');
+    expect(err.message[0].type).toEqual('string.email');
   });
 
-  it('should return invalid when email length is greather than 150', () => {
+  it('should return invalid when email length is greather than 150', async () => {
     const model = lodash.clone(data);
     model.email = new Array(152).join('a');
-    return expect(validate(model)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message.some(m => m.path == 'email' && m.type == 'string.max')).to.be.true;
-    });
+
+    const promise = validate(model);
+    await expect(promise).toReject();
+
+    const err: joi.CustomValidationError = await promise.catch(err => err);
+    expect(err.validationError).toBeTrue();
+    expect(err.message.some(m => m.path == 'email' && m.type == 'string.max')).toBeTrue();
   });
 
 });

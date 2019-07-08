@@ -1,14 +1,8 @@
-import 'source-map-support/register';
-
-import { expect, use } from 'chai';
-import * as chaiAsPromise from 'chai-as-promised';
 import { ServiceError } from 'errors/service';
 import { enRoles, IUser } from 'interfaces/models/user';
 import { User } from 'models/user';
 
 import * as service from './user';
-
-use(chaiAsPromise);
 
 describe('admin/services/user', () => {
   const user: IUser = {
@@ -19,104 +13,114 @@ describe('admin/services/user', () => {
     roles: [enRoles.admin]
   };
 
-  it('should create a new user', () => {
+  it('should create a new user', async () => {
     const data: IUser = {
       ...user,
       id: null
     };
 
-    return expect(service.save(data)).to.be.eventually.fulfilled.then((user: User) => {
-      expect(user).to.be.not.undefined;
-      expect(user.password).to.be.not.undefined;
-      expect(user.password).to.be.not.null;
-      expect(user.password).to.be.string;
-      expect(user.createdDate).to.be.instanceof(Date);
-      expect(user.createdDate.getTime()).not.to.be.NaN;
-      expect(user.password[0]).to.equal('$');
-      expect(user.roles).to.be.not.empty;
-      expect(user.roles[0]).to.be.equal(enRoles.admin);
+    return expect(service.save(data)).toResolve().then((user: User) => {
+      expect(user).not.toBeUndefined();
+      expect(user.password).not.toBeUndefined();
+      expect(user.password).not.toBeNull();
+      expect(user.password).toBeString();
+      expect(user.createdDate).toBeDate();
+      expect(user.createdDate.getTime()).not.toBeNaN();
+      expect(user.password[0]).toEqual('$');
+      expect(user.roles).not.toBeEmpty();
+      expect(user.roles[0]).toEqual(enRoles.admin);
     });
   });
 
-  it('should allow to update the user', () => {
+  it('should allow to update the user', async () => {
     const data: IUser = {
       ...user,
       email: 'new-admin@email.com'
     };
 
-    return expect(service.save(data)).to.be.eventually.fulfilled.then((user: User) => {
-      expect(user).to.be.not.undefined;
-      expect(user.id).to.be.equal(data.id);
-      expect(user.email).to.be.equal(data.email);
+    return expect(service.save(data)).toResolve().then((user: User) => {
+      expect(user).not.toBeUndefined();
+      expect(user.id).toEqual(data.id);
+      expect(user.email).toEqual(data.email);
     });
   });
 
-  it('should not allow to save an user without roles', () => {
+  it('should not allow to save an user without roles', async () => {
     const data: IUser = {
       ...user,
       roles: []
     };
 
-    return expect(service.save(data)).to.be.eventually.rejected.then((err: Error) => {
-      expect(err instanceof ServiceError).to.be.true;
-      expect(err.message).to.be.equal('roles-required');
-    });
+    const promise = service.save(data);
+    await expect(promise).toReject();
+
+    const err: Error = await promise.catch(err => err);
+    expect(err instanceof ServiceError).toBeTrue();
+    expect(err.message).toEqual('roles-required');
   });
 
-  it('should not allow to save a sysAdmin user', () => {
+  it('should not allow to save a sysAdmin user', async () => {
     const data: IUser = {
       ...user,
       roles: [enRoles.sysAdmin]
     };
 
-    return expect(service.save(data)).to.be.eventually.rejected.then((err: Error) => {
-      expect(err instanceof ServiceError).to.be.true;
-      expect(err.message).to.be.equal('not-allowed-to-change-sysAdmin');
-    });
+    const promise = service.save(data);
+    await expect(promise).toReject();
+
+    const err: Error = await promise.catch(err => err);
+    expect(err instanceof ServiceError).toBeTrue();
+    expect(err.message).toEqual('not-allowed-to-change-sysAdmin');
   });
 
-  it('should not allow to save an user with an invalid role', () => {
+  it('should not allow to save an user with an invalid role', async () => {
     const data: IUser = {
       ...user,
       roles: ['not-valid'] as any
     };
 
-    return expect(service.save(data)).to.be.eventually.rejected.then((err: Error) => {
-      expect(err instanceof ServiceError).to.be.true;
-      expect(err.message).to.be.equal('invalid-roles');
-    });
+    const promise = service.save(data);
+    await expect(promise).toReject();
+
+    const err: Error = await promise.catch(err => err);
+    expect(err instanceof ServiceError).toBeTrue();
+    expect(err.message).toEqual('invalid-roles');
   });
 
-  it('should not allow to save a user with same email', () => {
+  it('should not allow to save a user with same email', async () => {
     const data: IUser = {
       ...user,
       id: null,
       email: 'new-admin@email.com'
     };
 
-    console.log(data);
+    const promise = service.save(data);
+    await expect(promise).toReject();
 
-    return expect(service.save(data)).to.be.eventually.rejected.then((err: Error) => {
-      expect(err instanceof ServiceError).to.be.true;
-      expect(err.message).to.be.equal('email-unavailable');
-    });
+    const err: Error = await promise.catch(err => err);
+    expect(err instanceof ServiceError).toBeTrue();
+    expect(err.message).toEqual('email-unavailable');
   });
 
-  it('should allow remove a user', () => {
-    return expect(service.remove(user.id, { id: null } as any)).to.be.eventually.fulfilled as any;
+  it('should allow remove a user', async () => {
+    return expect(service.remove(user.id, { id: null } as any)).toResolve() as any;
   });
 
-  it('should not allow remove an sysAdmin user', () => {
-    return expect(service.remove(1, { id: null } as any)).to.be.eventually.rejected.then((err: Error) => {
-      expect(err instanceof ServiceError).to.be.true;
-      expect(err.message).to.be.equal('not-allowed-remove-sysAdmin');
-    });
+  it('should not allow remove an sysAdmin user', async () => {
+    const promise = service.remove(1, { id: null } as any);
+    await expect(promise).toReject();
+
+    const err: Error = await promise.catch(err => err);
+    expect(err instanceof ServiceError).toBeTrue();
+    expect(err.message).toEqual('not-allowed-remove-sysAdmin');
   });
 
-  it('should not allow remove the current user', () => {
-    return expect(service.remove(1, { id: 1 } as any)).to.be.eventually.rejected.then((err: Error) => {
-      expect(err instanceof ServiceError).to.be.true;
-      expect(err.message).to.be.equal('not-allowed-remove-current-user');
-    });
+  it('should not allow remove the current user', async () => {
+    const promise = service.remove(1, { id: 1 } as any);
+    await expect(promise).toReject();
+
+    const err: Error = await promise.catch(err => err);
+    expect(err instanceof ServiceError).toBeTrue();
+    expect(err.message).toEqual('not-allowed-remove-current-user');
   });
 });

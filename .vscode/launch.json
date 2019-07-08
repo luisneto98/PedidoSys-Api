@@ -9,9 +9,9 @@
     "protocol": "inspector",
     "restart": true,
     "sourceMaps": true,
-    "localRoot": "${workspaceRoot}/server",
-    "remoteRoot": "/src/server",
-    "outFiles": ["${workspaceRoot}/bin/**/*.js"],
+    "smartStep": false,
+    "localRoot": "${workspaceRoot}/src/server",
+    "remoteRoot": "/src/src/server",
     "skipFiles": [
       "${workspaceRoot}/node_modules/**/*.js",
       "<node_internals>/**/*.js"
@@ -24,7 +24,9 @@
     "protocol": "inspector",
     "stopOnEntry": false,
     "args": ["bin/**/*.spec.js", "--bail", "--reporter spec", "--no-timeouts"],
-    "env": { "NODE_ENV": "test" },
+    "env": {
+      "NODE_ENV": "test"
+    },
     "sourceMaps": true,
     "localRoot": "${workspaceRoot}/server",
     "remoteRoot": "/src/server",

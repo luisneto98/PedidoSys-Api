@@ -1,2 +1,1 @@
-/* tslint:disable */
-declare module '@vtex/phone';
+import 'jest-extended';

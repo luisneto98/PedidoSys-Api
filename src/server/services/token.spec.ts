@@ -1,15 +1,8 @@
-import 'source-map-support/register';
-
-import { expect, use } from 'chai';
-import * as chaiAsPromise from 'chai-as-promised';
-
 import * as service from './token';
 import { enTokenType } from './token';
 import { IUser, enRoles } from 'interfaces/models/user';
 import { IUserToken } from 'interfaces/tokens/user';
 import { IResetPasswordToken } from 'interfaces/tokens/resetPassword';
-
-use(chaiAsPromise);
 
 describe('services/token', () => {
   const user: IUser = {
@@ -21,34 +14,33 @@ describe('services/token', () => {
   };
 
   it('should generate a userToken', () => {
-    return expect(service.userToken(user)).to.eventually.be.fulfilled.then((token: string) => {
-      expect(token).to.be.a('string');
-      return expect(service.verify(token, enTokenType.userToken)).to.eventually.be.fulfilled as any;
+    return expect(service.userToken(user)).toResolve().then((token: string) => {
+      expect(token).toBeString();
+      return expect(service.verify(token, enTokenType.userToken)).toResolve() as any;
     }).then((userToken: IUserToken) => {
-      expect(userToken).to.contain.all.keys(user);
-      expect(userToken.roles).to.be.an('array');
-      expect(userToken.roles).to.be.lengthOf(1);
-      expect(userToken.roles[0]).to.be.equal(enRoles.admin);
+      expect(userToken).toContainAllKeys(Object.keys(user));
+      expect(userToken.roles).toBeArrayOfSize(1);
+      expect(userToken.roles[0]).toEqual(enRoles.admin);
     });
   });
 
   it('should verify method reject when send an invalid userToken', () => {
-    return expect(service.verify('invalid', enTokenType.userToken)).to.be.rejected;
+    return expect(service.verify('invalid', enTokenType.userToken)).toReject();
   });
 
   it('should verify method reject when type is different', () => {
-    return expect(service.userToken(user)).to.eventually.be.fulfilled.then((token: string) => {
-      expect(token).to.be.a('string');
-      return expect(service.verify(token, enTokenType.resetPassword)).to.eventually.be.rejected;
+    return expect(service.userToken(user)).toResolve().then((token: string) => {
+      expect(token).toBeString();
+      return expect(service.verify(token, enTokenType.resetPassword)).toReject();
     });
   });
 
   it('should generate a resetPassword token', () => {
-    return expect(service.resetPassword(user)).to.eventually.be.fulfilled.then((token: string) => {
-      expect(token).to.be.a('string');
-      return expect(service.verify(token, enTokenType.resetPassword)).to.eventually.be.fulfilled as any;
+    return expect(service.resetPassword(user)).toResolve().then((token: string) => {
+      expect(token).toBeString();
+      return expect(service.verify(token, enTokenType.resetPassword)).toResolve() as any;
     }).then((token: IResetPasswordToken) => {
-      expect(token.id).to.be.equal(user.id);
+      expect(token.id).toEqual(user.id);
     });
   });
 

@@ -21,6 +21,7 @@ services:
       - DATABASE_PASSWORD=123mudar
     volumes:
       - .:/src:cached
+      - ./docker/dev/start.sh:/usr/local/bin/start.sh:cached
     links:
       - database
 

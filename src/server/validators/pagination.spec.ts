@@ -1,13 +1,6 @@
-import 'source-map-support/register';
-
-import { expect, use } from 'chai';
-import * as chaiAsPromise from 'chai-as-promised';
 import { IPaginationParams } from 'interfaces/pagination';
-import * as joi from 'joi';
 
 import { validate } from './pagination';
-
-use(chaiAsPromise);
 
 describe('validators/pagination', () => {
   const model: IPaginationParams = {
@@ -20,135 +13,157 @@ describe('validators/pagination', () => {
 
   const columns = ['name'];
 
-  it('should return valid for a full object', () => {
+  it('should return valid for a full object', async () => {
     validate(model, columns).catch(err => console.table(err.message));
-    return expect(validate(model, columns)).to.eventually.be.fulfilled as any;
+    await expect(validate(model, columns)).resolves;
   });
 
-  it('should return valid for a minimum object', () => {
-    return expect(validate({ page: 0, pageSize: 10 }, columns)).to.eventually.be.fulfilled as any;
+  it('should return valid for a minimum object', async () => {
+    await expect(validate({ page: 0, pageSize: 10 }, columns)).resolves;
   });
 
-  it('should return invalid when term is not a string', () => {
+  it('should return invalid when term is not a string', async () => {
     const data = { ...model, term: 1 };
 
-    return expect(validate(data, columns)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('term');
-      expect(data.message[0].type).to.equal('string.base');
-    });
+    const promise = validate(data, columns);
+    await expect(promise).toReject();
+
+    const result = await promise.catch(err => err);
+    expect(result.validationError).toBeTrue();
+    expect(result.message).toHaveLength(1);
+    expect(result.message[0].path).toEqual('term');
+    expect(result.message[0].type).toEqual('string.base');
   });
 
-  it('should return invalid when page is not present', () => {
+  it('should return invalid when page is not present', async () => {
     const data = { ...model };
     delete data.page;
 
-    return expect(validate(data, columns)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('page');
-      expect(data.message[0].type).to.equal('any.required');
-    });
+    const promise = validate(data, columns);
+    await expect(promise).toReject();
+
+    const result = await promise.catch(err => err);
+    expect(result.validationError).toBeTrue();
+    expect(result.message).toHaveLength(1);
+    expect(result.message[0].path).toEqual('page');
+    expect(result.message[0].type).toEqual('any.required');
   });
 
-  it('should return invalid when page is not a number', () => {
+  it('should return invalid when page is not a number', async () => {
     const data = { ...model, page: 't' };
 
-    return expect(validate(data, columns)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('page');
-      expect(data.message[0].type).to.equal('number.base');
-    });
+    const promise = validate(data, columns);
+    await expect(promise).toReject();
+
+    const result = await promise.catch(err => err);
+    expect(result.validationError).toBeTrue();
+    expect(result.message).toHaveLength(1);
+    expect(result.message[0].path).toEqual('page');
+    expect(result.message[0].type).toEqual('number.base');
   });
 
-  it('should return invalid when page is less than 0', () => {
+  it('should return invalid when page is less than 0', async () => {
     const data = { ...model, page: -1 };
 
-    return expect(validate(data, columns)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('page');
-      expect(data.message[0].type).to.equal('number.min');
-    });
+    const promise = validate(data, columns);
+    await expect(promise).toReject();
+
+    const result = await promise.catch(err => err);
+    expect(result.validationError).toBeTrue();
+    expect(result.message).toHaveLength(1);
+    expect(result.message[0].path).toEqual('page');
+    expect(result.message[0].type).toEqual('number.min');
   });
 
-  it('should return invalid when pageSize is not present', () => {
+  it('should return invalid when pageSize is not present', async () => {
     const data = { ...model };
     delete data.pageSize;
 
-    return expect(validate(data, columns)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('pageSize');
-      expect(data.message[0].type).to.equal('any.required');
-    });
+    const promise = validate(data, columns);
+    await expect(promise).toReject();
+
+    const result = await promise.catch(err => err);
+    expect(result.validationError).toBeTrue();
+    expect(result.message).toHaveLength(1);
+    expect(result.message[0].path).toEqual('pageSize');
+    expect(result.message[0].type).toEqual('any.required');
   });
 
-  it('should return invalid when pageSize is not a number', () => {
+  it('should return invalid when pageSize is not a number', async () => {
     const data = { ...model, pageSize: 't' };
 
-    return expect(validate(data, columns)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('pageSize');
-      expect(data.message[0].type).to.equal('number.base');
-    });
+    const promise = validate(data, columns);
+    await expect(promise).toReject();
+
+    const result = await promise.catch(err => err);
+    expect(result.validationError).toBeTrue();
+    expect(result.message).toHaveLength(1);
+    expect(result.message[0].path).toEqual('pageSize');
+    expect(result.message[0].type).toEqual('number.base');
   });
 
-  it('should return invalid when pageSize is less than 1', () => {
+  it('should return invalid when pageSize is less than 1', async () => {
     const data = { ...model, pageSize: 0 };
 
-    return expect(validate(data, columns)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('pageSize');
-      expect(data.message[0].type).to.equal('number.min');
-    });
+    const promise = validate(data, columns);
+    await expect(promise).toReject();
+
+    const result = await promise.catch(err => err);
+    expect(result.validationError).toBeTrue();
+    expect(result.message).toHaveLength(1);
+    expect(result.message[0].path).toEqual('pageSize');
+    expect(result.message[0].type).toEqual('number.min');
   });
 
-  it('should return invalid when orderBy is not a string', () => {
+  it('should return invalid when orderBy is not a string', async () => {
     const data = { ...model, orderBy: 1 };
 
-    return expect(validate(data, columns)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('orderBy');
-      expect(data.message[0].type).to.equal('string.base');
-    });
+    const promise = validate(data, columns);
+    await expect(promise).toReject();
+
+    const result = await promise.catch(err => err);
+    expect(result.validationError).toBeTrue();
+    expect(result.message).toHaveLength(1);
+    expect(result.message[0].path).toEqual('orderBy');
+    expect(result.message[0].type).toEqual('string.base');
   });
 
-  it('should return invalid when orderBy is not a valid column', () => {
+  it('should return invalid when orderBy is not a valid column', async () => {
     const data = { ...model, orderBy: 'invalid' };
 
-    return expect(validate(data, columns)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('orderBy');
-      expect(data.message[0].type).to.equal('any.allowOnly');
-    });
+    const promise = validate(data, columns);
+    await expect(promise).toReject();
+
+    const result = await promise.catch(err => err);
+    expect(result.validationError).toBeTrue();
+    expect(result.message).toHaveLength(1);
+    expect(result.message[0].path).toEqual('orderBy');
+    expect(result.message[0].type).toEqual('any.allowOnly');
   });
 
-  it('should return invalid when orderDirection is not a string', () => {
+  it('should return invalid when orderDirection is not a string', async () => {
     const data = { ...model, orderDirection: 1 };
 
-    return expect(validate(data, columns)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('orderDirection');
-      expect(data.message[0].type).to.equal('string.base');
-    });
+    const promise = validate(data, columns);
+    await expect(promise).toReject();
+
+    const result = await promise.catch(err => err);
+    expect(result.validationError).toBeTrue();
+    expect(result.message).toHaveLength(1);
+    expect(result.message[0].path).toEqual('orderDirection');
+    expect(result.message[0].type).toEqual('string.base');
   });
 
-  it('should return invalid when orderDirection is not a asc or desc', () => {
+  it('should return invalid when orderDirection is not a asc or desc', async () => {
     const data = { ...model, orderDirection: 'invalid' };
 
-    return expect(validate(data, columns)).to.eventually.be.rejected.then((data: joi.CustomValidationError) => {
-      expect(data.validationError).to.be.true;
-      expect(data.message).to.have.length(1);
-      expect(data.message[0].path).to.equal('orderDirection');
-      expect(data.message[0].type).to.equal('any.allowOnly');
-    });
+    const promise = validate(data, columns);
+    await expect(promise).toReject();
+
+    const result = await promise.catch(err => err);
+    expect(result.validationError).toBeTrue();
+    expect(result.message).toHaveLength(1);
+    expect(result.message[0].path).toEqual('orderDirection');
+    expect(result.message[0].type).toEqual('any.allowOnly');
   });
 });
