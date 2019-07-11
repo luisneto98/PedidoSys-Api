@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "yarn ts-node-dev --inspect=0.0.0.0:5859 --respawn --transpileOnly --project tsconfig.dev.json ./src/server/main.ts",
     "lint": "yarn eslint \"./src/**/*.ts\"",
-    "compile": "yarn compile:templates && yarn compile:server && compile:migrations",
+    "compile": "yarn compile:templates && yarn compile:server && yarn compile:migrations",
     "compile:migrations": "yarn tsc -p tsconfig.db.json",
     "compile:templates": "yarn copyfiles -f ./src/services/mail/templates/*.pug ./bin/services/mail/templates/",
     "compile:server": "yarn tsc",
