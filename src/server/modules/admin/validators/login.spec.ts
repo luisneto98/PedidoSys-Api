@@ -10,7 +10,7 @@ describe('admin/validators/login', () => {
 
   it('should return valid for a full object', async () => {
     const model = data;
-    return expect(validate(model)).toReject();
+    return expect(validate(model)).toResolve();
   });
 
   it('should return invalid when email is empty', async () => {

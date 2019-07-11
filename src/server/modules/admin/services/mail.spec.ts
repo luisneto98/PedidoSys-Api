@@ -14,7 +14,7 @@ describe('admin/services/mail', () => {
 
   it('should send an email when user is created', () => {
     const notHashedPassword = '123';
-    return expect(service.sendUserCreate(user, notHashedPassword)).toResolve().then((mail: any) => {
+    return service.sendUserCreate(user, notHashedPassword).then((mail: any) => {
       expect(mail.to).toEqual(user.email);
       expect(mail.template).toEqual('user-create');
       expect(mail.html).not.toBeEmpty();
@@ -23,7 +23,7 @@ describe('admin/services/mail', () => {
   });
 
   it('should send an email when user is created', () => {
-    return expect(service.sendResetPassword(user, 'token')).toResolve().then((mail: any) => {
+    return service.sendResetPassword(user, 'token').then((mail: any) => {
       expect(mail.to).toEqual(user.email);
       expect(mail.template).toEqual('user-reset-password');
       expect(mail.html).not.toBeEmpty();

@@ -2,6 +2,8 @@ import * as knex from 'knex';
 import * as objection from 'objection';
 import { IS_TEST } from 'settings';
 
+export type Connection = ReturnType<typeof knex>;
+
 const config = {
   client: 'postgres',
   connection: {
@@ -29,22 +31,21 @@ const configTest = {
   },
   migrations: {
     tableName: 'knex_migrations',
-    directory: __dirname + '/../../bin/database/migrations'
+    directory: __dirname + '/../../bin/migrations'
   },
   seeds: {
-    directory: __dirname + '/../../bin/database/migrations/seeds'
+    directory: __dirname + '/../../bin/migrations/seeds'
   },
+  log: {
+    warn() { },
+    error(message: string) { console.error(message); },
+    deprecate() { },
+    debug() { },
+  }
 };
 
-export function connect(): knex {
+export async function connectAndMigrate(): Promise<Connection> {
   const connection = knex(IS_TEST ? configTest : config);
-  objection.Model.knex(connection);
-
-  return connection;
-}
-
-export async function connectAndMigrate(): Promise<knex> {
-  const connection = connect();
   objection.Model.knex(connection);
 
   await connection.migrate.latest();

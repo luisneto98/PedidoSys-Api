@@ -11,9 +11,8 @@ import { allowCors } from './middlewares/allowCors';
 import { bindUser } from './middlewares/bindUser';
 import * as errors from './middlewares/errors';
 import { router as modulesRouter } from './modules/router';
+import { exception } from './services/log';
 import * as settings from './settings';
-
-const connection = db.connect();
 
 const app = express();
 
@@ -38,7 +37,13 @@ app.use(
     errors.productionError
 );
 
-const server = app.listen(settings.PORT, () => console.log(`server started: PORT: ${settings.PORT} | ENV: ${settings.ENV}`));
+const startServer = db.connectAndMigrate().then(connection => {
+  const server = app.listen(settings.PORT, () => console.log(`server started: PORT: ${settings.PORT} | ENV: ${settings.ENV}`));
+  return { connection, server };
+}).catch(err => {
+  exception(err);
+  throw err;
+});
 
 process.on('unhandledRejection', (reason: any, p: any) => {
   console.error('unhandledRejection');
@@ -47,6 +52,8 @@ process.on('unhandledRejection', (reason: any, p: any) => {
 });
 
 process.on('SIGTERM', async () => {
+  const { connection, server } = await startServer;
+
   console.error('SIGMTERM - fechando servidor');
   await new Promise(resolve => server.close(() => resolve()));
   console.error('SIGMTERM - servidor fechado');

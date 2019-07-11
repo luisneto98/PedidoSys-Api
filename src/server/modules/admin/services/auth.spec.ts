@@ -1,3 +1,4 @@
+import { connectAndMigrate, Connection } from 'db';
 import { enRoles } from 'interfaces/models/user';
 import * as _ from 'lodash';
 import { User } from 'models/user';
@@ -6,6 +7,8 @@ import * as tokenService from 'services/token';
 import * as service from './auth';
 
 describe('admin/services/auth', () => {
+  let connection: Connection;
+
   const data = {
     email: 'admin@waproject.com.br',
     password: 'senha@123'
@@ -19,11 +22,15 @@ describe('admin/services/auth', () => {
     roles: [] as enRoles[]
   };
 
+  beforeAll(async () => connection = await connectAndMigrate());
+  afterAll(() => connection.destroy());
+
   it('should return token for a valid user when try to login', async () => {
     const promise = service.login(data.email, data.password);
 
-    promise.catch(err => console.error(err));
-    const result = await expect(promise).toResolve();
+    await expect(promise).toResolve();
+    const result = await promise;
+
     expect(result).toBeString();
   });
 
@@ -52,10 +59,9 @@ describe('admin/services/auth', () => {
   });
 
   it('should return successfully when try to change password', async () => {
-    return expect(service.changePassword(userToken, data.password, '123456')).toResolve()
-      .then((user: User) => {
-        return expect(user.checkPassword('123456')).toResolve();
-      });
+    return service.changePassword(userToken, data.password, '123456').then((user: User) => {
+      return expect(user.checkPassword('123456')).toResolve();
+    });
   });
 
   it('should return successfully when try to send reset password email', async () => {
@@ -72,13 +78,19 @@ describe('admin/services/auth', () => {
 
   it('should return successfully when try to reset password', async () => {
     const newPassword = 'senha@123';
-    return expect(tokenService.resetPassword(userToken)).toResolve().then((token: string) => {
-      expect(token).toBeString();
-      return expect(service.resetPassword(token, newPassword)).toResolve();
-    }).then((user: any) => {
-      expect(user).toBeInstanceOf(User);
-      expect(user.checkPassword(newPassword)).toResolve();
-    });
+
+    const promiseToken = tokenService.resetPassword(userToken);
+    await expect(promiseToken).toResolve();
+    const token = await promiseToken;
+
+    expect(token).toBeString();
+
+    const promise = service.resetPassword(token, newPassword);
+    await expect(promise).toResolve();
+    const user = await promise;
+
+    expect(user).toBeInstanceOf(User);
+    expect(user.checkPassword(newPassword)).toResolve();
   });
 
   it('should throw user-not-found when try to reset password and userId is invalid', async () => {
@@ -86,7 +98,9 @@ describe('admin/services/auth', () => {
     const model = _.cloneDeep(userToken);
     model.id = 0;
 
-    const token = await expect(tokenService.userToken(userToken)).toResolve();
+    const promiseToken = tokenService.resetPassword(model);
+    await expect(promiseToken).toResolve();
+    const token = await promiseToken;
 
     expect(token).toBeString();
     const promise = service.resetPassword(token, newPassword);
@@ -99,8 +113,9 @@ describe('admin/services/auth', () => {
   it('should throw token-type-not-match when try to reset password and token is invalid', async () => {
     const newPassword = 'senha@123';
 
-    const token = await expect(tokenService.userToken(userToken)).toResolve();
-    expect(token).toBeString();
+    const promiseToken = tokenService.userToken(userToken);
+    await expect(promiseToken).toResolve();
+    const token = await promiseToken;
 
     const promise = service.resetPassword(token, newPassword);
     await expect(promise).toReject();

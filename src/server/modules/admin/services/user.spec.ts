@@ -1,3 +1,4 @@
+import { connectAndMigrate, Connection } from 'db';
 import { ServiceError } from 'errors/service';
 import { enRoles, IUser } from 'interfaces/models/user';
 import { User } from 'models/user';
@@ -5,6 +6,8 @@ import { User } from 'models/user';
 import * as service from './user';
 
 describe('admin/services/user', () => {
+  let connection: Connection;
+
   const user: IUser = {
     id: 2,
     email: 'test' + Date.now() + '@email.com',
@@ -13,13 +16,16 @@ describe('admin/services/user', () => {
     roles: [enRoles.admin]
   };
 
+  beforeAll(async () => connection = await connectAndMigrate());
+  afterAll(() => connection.destroy());
+
   it('should create a new user', async () => {
     const data: IUser = {
       ...user,
       id: null
     };
 
-    return expect(service.save(data)).toResolve().then((user: User) => {
+    return service.save(data).then((user: User) => {
       expect(user).not.toBeUndefined();
       expect(user.password).not.toBeUndefined();
       expect(user.password).not.toBeNull();
@@ -38,7 +44,7 @@ describe('admin/services/user', () => {
       email: 'new-admin@email.com'
     };
 
-    return expect(service.save(data)).toResolve().then((user: User) => {
+    return service.save(data).then((user: User) => {
       expect(user).not.toBeUndefined();
       expect(user.id).toEqual(data.id);
       expect(user.email).toEqual(data.email);

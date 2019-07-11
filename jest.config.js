@@ -10,6 +10,7 @@ module.exports = {
     }
   },
   setupFilesAfterEnv: ['jest-extended'],
+  maxConcurrency: 1,
   rootDir: 'src/server',
   testRegex: '.spec.ts$',
   transform: {

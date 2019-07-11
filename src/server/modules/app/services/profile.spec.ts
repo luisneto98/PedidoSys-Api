@@ -1,11 +1,12 @@
+import { connectAndMigrate, Connection } from 'db';
 import { IUser } from 'interfaces/models/user';
 import { IUserToken } from 'interfaces/tokens/user';
-import * as db from 'db';
 
 import * as service from './profile';
 
 describe('app/services/profile', () => {
-  let connection: ReturnType<typeof db.connect>;
+  let connection: Connection;
+
   const userToken: IUserToken = {
     id: 1,
     email: 'danielprado.ad@gmail.com',
@@ -21,8 +22,8 @@ describe('app/services/profile', () => {
     roles: []
   };
 
-  beforeAll(async () => connection = await db.connectAndMigrate());
-  afterAll(async () => await connection.destroy());
+  beforeAll(async () => connection = await connectAndMigrate());
+  afterAll(() => connection.destroy());
 
   it('should update user profile', async () => {
     const promise = service.save(user, userToken);

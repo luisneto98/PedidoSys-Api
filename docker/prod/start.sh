@@ -7,5 +7,4 @@
   echo 'Database ready!'!;
 "
 
-npm run migrate
 pm2-docker start ecosystem.json

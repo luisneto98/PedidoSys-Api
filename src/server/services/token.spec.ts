@@ -14,11 +14,11 @@ describe('services/token', () => {
   };
 
   it('should generate a userToken', () => {
-    return expect(service.userToken(user)).toResolve().then((token: string) => {
+    return service.userToken(user).then((token: string) => {
       expect(token).toBeString();
-      return expect(service.verify(token, enTokenType.userToken)).toResolve() as any;
+      return service.verify(token, enTokenType.userToken);
     }).then((userToken: IUserToken) => {
-      expect(userToken).toContainAllKeys(Object.keys(user));
+      expect(userToken).toContainKeys(Object.keys(user));
       expect(userToken.roles).toBeArrayOfSize(1);
       expect(userToken.roles[0]).toEqual(enRoles.admin);
     });
@@ -29,16 +29,16 @@ describe('services/token', () => {
   });
 
   it('should verify method reject when type is different', () => {
-    return expect(service.userToken(user)).toResolve().then((token: string) => {
+    return service.userToken(user).then((token: string) => {
       expect(token).toBeString();
       return expect(service.verify(token, enTokenType.resetPassword)).toReject();
     });
   });
 
   it('should generate a resetPassword token', () => {
-    return expect(service.resetPassword(user)).toResolve().then((token: string) => {
+    return service.resetPassword(user).then((token: string) => {
       expect(token).toBeString();
-      return expect(service.verify(token, enTokenType.resetPassword)).toResolve() as any;
+      return service.verify(token, enTokenType.resetPassword);
     }).then((token: IResetPasswordToken) => {
       expect(token.id).toEqual(user.id);
     });

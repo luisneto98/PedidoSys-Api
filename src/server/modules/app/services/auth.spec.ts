@@ -1,10 +1,11 @@
 import * as joi from 'joi';
 
 import * as service from './auth';
-import * as db from 'db';
+import { connectAndMigrate, Connection } from 'db';
 
 describe('app/services/auth', () => {
-  let connection: ReturnType<typeof db.connect>;
+  let connection: Connection;
+
   const login = {
     email: 'admin@waproject.com.br',
     password: 'senha@123',
@@ -12,8 +13,8 @@ describe('app/services/auth', () => {
     deviceName: 'test-console'
   };
 
-  beforeAll(async () => connection = await db.connectAndMigrate());
-  afterAll(async () => await connection.destroy());
+  beforeAll(async () => connection = await connectAndMigrate());
+  afterAll(() => connection.destroy());
 
   it('should return token for a valid user when try to login', async () => {
     const promise = service.login(login);

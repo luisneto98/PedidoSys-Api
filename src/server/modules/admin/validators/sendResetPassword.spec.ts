@@ -16,7 +16,7 @@ describe('admin/validators/sendResetPassword', () => {
     const model = _.clone(data);
     delete model.email;
 
-    const promise = validate(data);
+    const promise = validate(model);
     await expect(promise).toReject();
 
     const result = await promise.catch(err => err);
@@ -30,7 +30,7 @@ describe('admin/validators/sendResetPassword', () => {
     const model = _.clone(data);
     model.email = 'invalid';
 
-    const promise = validate(data);
+    const promise = validate(model);
     await expect(promise).toReject();
 
     const result = await promise.catch(err => err);

@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "bin/migrations",
+    "outDir": "bin",
     "rootDir": "src",
     "baseUrl": "./src"
   },
