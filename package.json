@@ -17,7 +17,7 @@
     "lint": "yarn eslint \"./src/**/*.ts\"",
     "compile": "yarn compile:templates && yarn compile:server && yarn compile:migrations",
     "compile:migrations": "yarn tsc -p tsconfig.db.json",
-    "compile:templates": "yarn copyfiles -f ./src/services/mail/templates/*.pug ./bin/services/mail/templates/",
+    "compile:templates": "yarn copyfiles -f ./src/server/services/mail/templates/*.pug ./bin/server/services/mail/templates/",
     "compile:server": "yarn tsc",
     "watch:templates": "yarn watch \"yarn compile:templates\" ./src/server/services/mail/templates",
     "watch:server": "yarn tsc -w --preserveWatchOutput",
