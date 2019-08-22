@@ -92,7 +92,7 @@ async function cleanup(params) {
     to: `POSTGRES_DB=${lodash.camelCase(params.project.replace('-api', ''))}`
   }, {
     from: 'DATABASE_DB=waproject',
-    to: `POSTGRES_DB=${lodash.camelCase(params.project.replace('-api', ''))}`
+    to: `DATABASE_DB=${lodash.camelCase(params.project.replace('-api', ''))}`
   }]);
 }
 

@@ -54,14 +54,24 @@ process.on('unhandledRejection', (reason: any, p: any) => {
 process.on('SIGTERM', async () => {
   const { connection, server } = await startServer;
 
-  console.error('SIGMTERM - fechando servidor');
-  await new Promise(resolve => server.close(() => resolve()));
-  console.error('SIGMTERM - servidor fechado');
+  await new Promise(resolve => {
+    setTimeout(() => resolve(), settings.IS_DEV ? 3000 : 10000);
 
-  console.error('SIGMTERM - mongoose disconect');
-  await connection.destroy();
-  console.error('SIGMTERM - mongoose disconect success');
+    console.error('SIGMTERM - fechando servidor');
+    new Promise(resolve => server.close(() => resolve()))
+      .then(() => {
+        console.error('SIGMTERM - servidor fechado');
+        console.error('SIGMTERM - mongoose disconect');
+        return connection.destroy();
+      }).then(() => {
+        console.error('SIGMTERM - mongoose disconect success');
+        console.error('SIGMTERM - finalizando processo');
+        resolve();
+      }).catch(err => {
+        console.error(err);
+        resolve();
+      });
+  });
 
-  console.error('SIGMTERM - finalizando processo');
   process.exit(0);
 });
