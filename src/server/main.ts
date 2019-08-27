@@ -15,6 +15,7 @@ import { exception } from './services/log';
 import * as settings from './settings';
 
 const app = express();
+app.disable('etag');
 
 if (settings.IS_PROD) {
   app.use(timeout('5s'));
