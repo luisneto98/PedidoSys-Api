@@ -1,6 +1,10 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "prettier"],
+  "extends": [
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
+  ],
   "parserOptions": {
     "ecmaVersion": 10,
     "sourceType": "module",
@@ -12,13 +16,16 @@
     "node": true
   },
   "rules": {
-    "indent": ["error", 2, {
-      "SwitchCase": 1
-    }],
+    "max-depth": ["warn", 3],
     "no-restricted-imports": ["error"],
     "linebreak-style": ["error", "unix"],
     "max-lines": ["error", 300],
-    "max-len": ["error", 150],
+    "max-len": ["error", 120, 2, {
+      "ignorePattern": "^(import|export)",
+      "ignoreUrls": true
+    }],
+    "constructor-super": ["warn"],
+    "no-return-await": ["error"],
     "no-multiple-empty-lines": ["error", {
       "max": 1
     }],
@@ -28,7 +35,6 @@
     "quotes": ["error", "single"],
     "quote-props": ["error", "as-needed"],
     "object-shorthand": ["error"],
-    "semi": ["error", "always"],
     "camelcase": ["error", {
       "properties": "always"
     }],

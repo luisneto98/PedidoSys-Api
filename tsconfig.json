@@ -1,29 +1,24 @@
 {
   "compilerOptions": {
-    "typeRoots": ["./node_modules/@types", "./src/server/declarations"],
-    "target": "es2017",
+    "target": "esnext",
     "module": "commonjs",
     "moduleResolution": "node",
+    "removeComments": true,
+    "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "removeComments": true,
-    "skipLibCheck": true,
+    "inlineSourceMap": true,
     "noImplicitAny": true,
     "noEmitOnError": true,
     "noUnusedLocals": true,
     "importHelpers": true,
-    "inlineSourceMap": false,
-    "inlineSources": false,
+    "inlineSources": true,
     "alwaysStrict": true,
-    "allowJs": true,
-    "rootDir": "./src/server",
-    "baseUrl": "./src/server",
-    "outDir": "bin/server"
+    "outDir": "./bin",
+    "baseUrl": "./src"
   },
   "include": [
-    "src/server/**/*.ts",
-    "src/server/**/*.d.ts"
+    "./src/**/*.ts"
   ],
-  "compileOnSave": false
+  "exclude": ["node_modules", "dist"]
 }

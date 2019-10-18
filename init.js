@@ -45,60 +45,82 @@ async function checkYarn() {
 }
 
 async function askParams(answers = {}) {
-  const params = await inquirer.prompt([{
-    name: 'project',
-    default: answers.project,
-    message: 'Nome do projeto',
-    validate: i => i.length >= 3 ? true : 'Pelo menos 3 letras',
-    filter: i => lodash.kebabCase(i.endsWith('-api') ? i : `${i}-api`).toLowerCase()
-  }, {
-    name: 'repository',
-    default: answers.repository,
-    message: 'Repositorio'
-  }, {
-    name: 'confirmed',
-    type: 'confirm',
-    message: 'Confirma as configurações?'
-  }]);
+  const params = await inquirer.prompt([
+    {
+      name: 'project',
+      default: answers.project,
+      message: 'Nome do projeto',
+      validate: i => (i.length >= 3 ? true : 'Pelo menos 3 letras')
+    },
+    {
+      name: 'repository',
+      default: answers.repository,
+      message: 'Repositorio'
+    },
+    {
+      name: 'confirmed',
+      type: 'confirm',
+      message: 'Confirma as configurações?'
+    }
+  ]);
 
   if (!params.confirmed) {
     console.log('---- Responda novamente:');
     return askParams(params);
   }
 
-  return params;
+  return {
+    ...params,
+    slug: lodash.kebabCase(i.endsWith('-api') ? i : `${i}-api`).toLowerCase()
+  };
 }
 
 async function cleanup(params) {
-  await replaceContent('./package.json', [{
-    from: 'waproject-base',
-    to: params.project
-  }, {
-    from: /waproject\/api-base/gi,
-    to: `waproject/${params.project}`
-  }, {
-    from: 'waproject-repository',
-    to: params.repository
-  }]);
+  await replaceContent('./package.json', [
+    {
+      from: 'waproject-base',
+      to: params.slug
+    },
+    {
+      from: /waproject\/api-base/gi,
+      to: `waproject/${params.slug}`
+    },
+    {
+      from: 'waproject-repository',
+      to: params.repository
+    }
+  ]);
 
-  await replaceContent('./docker-compose.yml', [{
-    from: 'waproject-api',
-    to: params.project
-  }, {
-    from: 'waproject-database',
-    to: params.project.replace('-api', '-database')
-  }, {
-    from: 'POSTGRES_DB=waproject',
-    to: `POSTGRES_DB=${lodash.camelCase(params.project.replace('-api', ''))}`
-  }, {
-    from: 'DATABASE_DB=waproject',
-    to: `DATABASE_DB=${lodash.camelCase(params.project.replace('-api', ''))}`
-  }]);
+  await replaceContent('./docker-compose.yml', [
+    {
+      from: 'waproject-api',
+      to: params.slug
+    },
+    {
+      from: 'waproject-database',
+      to: params.slug.replace('-api', '-database')
+    },
+    {
+      from: 'POSTGRES_DB=waproject',
+      to: `POSTGRES_DB=${lodash.camelCase(params.slug.replace('-api', ''))}`
+    },
+    {
+      from: 'DATABASE_DB=waproject',
+      to: `DATABASE_DB=${lodash.camelCase(params.slug.replace('-api', ''))}`
+    }
+  ]);
+
+  await replaceContent('./index.ts', [
+    {
+      from: 'Wa Project API',
+      to: params.project
+    }
+  ]);
 }
 
 async function replaceContent(file, replacers) {
   let content = await new Promise((resolve, reject) =>
-    fs.readFile(file, 'utf8', (err, data) => err ? reject(err) : resolve(data))
+    fs.readFile(file, 'utf8', (err, data) => (err ? reject(err) : resolve(data)))
   );
 
   for (let replacer of replacers) {
@@ -106,7 +128,7 @@ async function replaceContent(file, replacers) {
   }
 
   await new Promise((resolve, reject) =>
-    fs.writeFile(file, content, (err, data) => err ? reject(err) : resolve(data))
+    fs.writeFile(file, content, (err, data) => (err ? reject(err) : resolve(data)))
   );
 }
 
@@ -127,20 +149,20 @@ async function resetGit(params) {
 }
 
 async function selfDestruction() {
-  await new Promise((resolve, reject) =>
-    rimraf('./init.js', err => err ? reject(err) : resolve())
-  );
+  await new Promise((resolve, reject) => rimraf('./init.js', err => (err ? reject(err) : resolve())));
 }
 
 async function execCommand(command) {
-  await new Promise((resolve, reject) => {
-    childProcess.exec(command, err => err ? reject(err) : resolve());
+  return new Promise((resolve, reject) => {
+    childProcess.exec(command, (err, std) => (err ? reject(err) : resolve(std)));
   });
 }
 
-init().then(() => {
-  process.exit(0);
-}).catch(err => {
-  console.error(err);
-  process.exit(-1);
-});
+init()
+  .then(() => {
+    process.exit(0);
+  })
+  .catch(err => {
+    console.error(err);
+    process.exit(-1);
+  });

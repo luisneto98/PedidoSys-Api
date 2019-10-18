@@ -9,6 +9,7 @@ Utilize o VSCode, já está configurado com sugestão de extensões e debug.
 
 * Node
 * Typescript
+* NestJs
 * Docker
 * Express (Http Api)
 * Objection (ORM) / Knex (Query builder e migrations)

@@ -1,30 +1,28 @@
 FROM node:12-alpine
 
-COPY docker/prod/ecosystem.json /dist/ecosystem.json
-COPY docker/prod/start.sh /dist/start.sh
-ADD . /src
+WORKDIR /app
+COPY . /app
 
-WORKDIR /src
+RUN set -x \
+    && apk add --no-cache git \
+    && echo "VERSION="$(git rev-list --all --count) > .env \
+    && cat .env \
+    && yarn \
+    && yarn test \
+    && yarn build
 
-RUN yarn install
-RUN yarn test
-RUN yarn compile
-RUN yarn install --production --force
-
-RUN mv /src/bin /dist/bin \
-    && mv /src/node_modules /dist/node_modules \
-    && mv /src/package.json /dist/package.json \
-    && ls /dist -al
-
-# Cria uma segunda imagem mais leve com os arquivos compilados
 FROM node:12-alpine
 
-EXPOSE 3000
+WORKDIR /app
 
-COPY --from=0 /dist /var/www
+COPY --from=0 /app/bin /app/bin
+COPY --from=0 /app/package.json /app
+COPY --from=0 /app/.env /app
+COPY --from=0 /app/knexfile.js /app
+COPY --from=0 /app/yarn.lock /app
 
-RUN npm install -g pm2
+RUN set -x \
+    && yarn install --prod \
+    && yarn cache clean
 
-WORKDIR /var/www
-
-CMD sh start.sh
+CMD node /app/bin/index.js

@@ -1,15 +1,13 @@
 FROM node:12-alpine
 
-COPY start.sh /usr/local/bin/
-
 RUN set -x \
     && chmod 775 /usr/local/bin/* \
     && chmod +x /usr/local/bin/*.sh \
-    && mkdir /src
+    && mkdir /server
 
-WORKDIR /src
+WORKDIR /server
 
-EXPOSE 3000
-EXPOSE 5859
+EXPOSE 5000
+EXPOSE 9229
 
-CMD start.sh
+CMD yarn start:dev
