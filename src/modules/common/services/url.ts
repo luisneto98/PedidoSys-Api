@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { Injectable } from '@nestjs/common';
 import { API_DNS, APP_DNS } from 'settings';
 
