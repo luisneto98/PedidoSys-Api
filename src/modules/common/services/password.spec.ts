@@ -8,45 +8,32 @@ describe('Admin/PasswordService', () => {
   });
 
   it('should generate a valid password with a valid hash', async () => {
-    return service
-      .generatePassword()
-      .then(({ password, hash }) => {
-        expect(typeof password).toBe('string');
-        expect(typeof hash).toBe('string');
-        return service.compare(hash, password);
-      })
-      .then(isValid => {
-        expect(isValid).toBeTrue();
-      });
+    const { password, hash } = await service.generatePassword();
+    expect(typeof password).toBe('string');
+    expect(typeof hash).toBe('string');
+
+    const isValid = await service.compare(hash, password);
+    expect(isValid).toBeTrue();
   });
 
   it('should hash a password with a valid hash', async () => {
-    return service
-      .hash('senha@123')
-      .then(hash => {
-        expect(typeof hash).toBe('string');
-        return service.compare(hash, 'senha@123');
-      })
-      .then(isValid => {
-        expect(isValid).toBeTrue();
-      });
+    const hash = await service.hash('senha@123');
+    expect(typeof hash).toBe('string');
+
+    const isValid = await service.compare(hash, 'senha@123');
+    expect(isValid).toBeTrue();
   });
 
   it('should return invalid when a invalid password', async () => {
-    return service
-      .hash('senha@123')
-      .then(hash => {
-        expect(typeof hash).toBe('string');
-        return service.compare(hash, 'senha@1234');
-      })
-      .then(isValid => {
-        expect(isValid).toBeFalse();
-      });
+    const hash = await service.hash('senha@123');
+    expect(typeof hash).toBe('string');
+
+    const isValid = await service.compare(hash, 'senha@1234');
+    expect(isValid).toBeFalse();
   });
 
   it('should return invalid when a invalid hash is pass', async () => {
-    return service.compare('invalid', 'senha@1234').then(isValid => {
-      expect(isValid).toBeFalse();
-    });
+    const isValid = await service.compare('invalid', 'senha@1234');
+    expect(isValid).toBeFalse();
   });
 });

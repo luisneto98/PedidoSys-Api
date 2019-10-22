@@ -15,6 +15,7 @@ export interface IMail {
 
   from: string;
   to: string;
+  template?: string;
   subject: string;
   html: string;
 }
@@ -24,6 +25,7 @@ export class MailService {
   private mailgun: ReturnType<typeof mailgunApi>;
 
   constructor(private urlService: UrlService) {
+    /* istanbul ignore next */
     if (!IS_TEST && MAIL.credentials.apiKey) {
       this.mailgun = mailgunApi(MAIL.credentials);
     }
@@ -35,24 +37,30 @@ export class MailService {
     const html = await this.renderTemplate(template, data);
     const mail: IMail = { from: MAIL.from, to, subject, html };
 
+    /* istanbul ignore else */
     if (IS_TEST) {
-      (<any>mail).template = template;
+      mail.template = template;
       return mail;
     }
 
+    /* istanbul ignore next */
     if (IS_DEV) {
       await this.outputFile(mail);
       return mail;
     }
 
+    /* istanbul ignore next */
     if (!this.mailgun) {
       throw new Error('Please provide MAILGUN_APIKEY!');
     }
 
+    /* istanbul ignore next */
     mail.providerResponse = await this.mailgun.messages().send(mail);
+    /* istanbul ignore next */
     return mail;
   }
 
+  /* istanbul ignore next */
   private async outputFile(mail: IMail): Promise<IMail> {
     const outputDir = './output-emails';
 

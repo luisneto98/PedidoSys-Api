@@ -3,12 +3,11 @@ import { IUserSocial } from 'interfaces/models/userSocial';
 import { ISocialUserInfo } from 'interfaces/socialUserInfo';
 import { ICurrentUser } from 'interfaces/tokens/currentUser';
 import { IResetPasswordToken } from 'interfaces/tokens/resetPassword';
-import { MailService } from 'modules/common/services/mail';
+import { IMail, MailService } from 'modules/common/services/mail';
 import { PasswordService } from 'modules/common/services/password';
 import { enTokenType, TokenService } from 'modules/common/services/token';
 import { UrlService } from 'modules/common/services/url';
 import { User } from 'modules/database/models/user';
-import { IS_DEV } from 'settings';
 
 import { UserRepository } from '../respoitories/user';
 
@@ -53,19 +52,15 @@ export class AuthService {
     return this.userRepository.update(user);
   }
 
-  public async sendResetPassword(email: string): Promise<void> {
+  public async sendResetPassword(email: string): Promise<IMail> {
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new NotFoundException();
 
     const token = await this.tokenService.resetPassword(user);
-    await this.mailService.send(user.email, 'Recuperar Acesso', 'user-reset-password', {
+    return this.mailService.send(user.email, 'Recuperar Acesso', 'user-reset-password', {
       ...user,
       url: this.urlService.resetPassword(token)
     });
-
-    if (IS_DEV) {
-      console.log(`*******\nRESET TOKEN: ${token}\n*******`);
-    }
   }
 
   public async resetPassword(token: string, newPassword: string): Promise<User> {

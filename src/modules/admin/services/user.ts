@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { enRoles, IUser, listPublicRoles } from 'interfaces/models/user';
 import { ICurrentUser } from 'interfaces/tokens/currentUser';
 import { MailService } from 'modules/common/services/mail';
@@ -35,6 +35,10 @@ export class UserService {
   public async remove(userId: number, currentUser: ICurrentUser): Promise<void> {
     const user = await this.userRepository.findById(userId);
 
+    if (!user) {
+      throw new NotFoundException('not-found');
+    }
+
     if (user.id === currentUser.id) {
       throw new BadRequestException('not-allowed-remove-current-user');
     }
@@ -48,7 +52,7 @@ export class UserService {
 
   private async create(model: IUser): Promise<User> {
     const isEmailAvailable = await this.userRepository.isEmailAvailable(model.email);
-    if (!isEmailAvailable) throw new BadRequestException('email-unavailable');
+    if (!isEmailAvailable) throw new ConflictException('email-unavailable');
 
     const { password, hash } = await this.passwordService.generatePassword();
     model.password = hash;
@@ -61,11 +65,11 @@ export class UserService {
 
   private async update(model: IUser): Promise<User> {
     const isEmailAvailable = await this.userRepository.isEmailAvailable(model.email, model.id);
-    if (!isEmailAvailable) throw new BadRequestException('email-unavailable');
+    if (!isEmailAvailable) throw new ConflictException('email-unavailable');
 
     const user = await this.userRepository.findById(model.id);
 
-    if (!user) throw new BadRequestException('not-found');
+    if (!user) throw new NotFoundException('not-found');
     if (user.isSysAdmin()) throw new BadRequestException('not-allowed-to-change-sysAdmin');
 
     return this.userRepository.update({ ...user, ...model });
