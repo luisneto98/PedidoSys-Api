@@ -29,7 +29,7 @@ export class S3Provider implements IUploadProvider {
     aws.config.update(this.credentials);
 
     const ext = filename.split('.').pop();
-    filename = `uploads-test/${format(new Date(), 'yyyy/MM/dd')}/${uuid.v4()}.${ext}`;
+    filename = `uploads/${format(new Date(), 'yyyy/MM/dd')}/${uuid.v4()}.${ext}`;
 
     const upload = new aws.S3.ManagedUpload({
       params: {
