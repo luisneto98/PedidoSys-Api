@@ -5,6 +5,8 @@
 
 .docker-data
 .data
+upload
+!src/modules/common/services/upload
 
 # User-specific stuff:
 .idea/**/workspace.xml

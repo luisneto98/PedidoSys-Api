@@ -1,5 +1,5 @@
-import { MailService } from './mail';
-import { UrlService } from './url';
+import { MailService } from '.';
+import { UrlService } from '../url';
 
 describe('Admin/MailService', () => {
   let service: MailService;

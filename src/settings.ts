@@ -1,4 +1,6 @@
 import dotenv from 'dotenv';
+import { MailProvider } from 'modules/common/services/mail/providers';
+import { UploadProvider } from 'modules/common/services/upload/providers';
 
 const ENV_FILE = dotenv.config().parsed || {};
 
@@ -37,9 +39,37 @@ export const AUTH = {
 };
 
 export const MAIL = {
-  from: process.env.MAILGUN_FROM,
-  credentials: {
-    apiKey: process.env.MAILGUN_APIKEY,
-    domain: process.env.MAILGUN_DOMAIN
+  provider: process.env.MAIL_PROVIDER as MailProvider,
+  from: process.env.MAIL_FROM,
+  mailgun: {
+    apiKey: process.env.MAIL_MAILGUN_APIKEY,
+    domain: process.env.MAIL_MAILGUN_DOMAIN
+  },
+  aws: {
+    accessKeyId: process.env.AWS_ACCESSKEY,
+    secretAccessKey: process.env.AWS_SECRET,
+    region: process.env.AWS_REGION
   }
 };
+
+export const UPLOAD = {
+  provider: process.env.UPLOAD_PROVIDER as UploadProvider,
+  aws: {
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESSKEY,
+      secretAccessKey: process.env.AWS_SECRET,
+      region: process.env.AWS_REGION
+    },
+    bucket: process.env.AWS_S3_BUCKET,
+    publicUrl: process.env.AWS_S3_URL
+  }
+};
+
+console.table({
+  NODE_ENV,
+  MAIL_PROVIDER: MAIL.provider,
+  UPLOAD_PROVIDER: UPLOAD.provider,
+  SENTRY_ENABLED: !!SENTRY_DSN,
+  API_DNS,
+  APP_DNS
+});

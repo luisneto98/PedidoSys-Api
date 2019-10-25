@@ -6,7 +6,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as sentry from '@sentry/node';
 import { ExceptionFilter } from 'filters/exception';
 import { ApplicationModule } from 'modules/';
-import { IS_PROD, NODE_ENV, SENTRY_DSN, VERSION } from 'settings';
+import morgan from 'morgan';
+import { IS_DEV, IS_PROD, NODE_ENV, SENTRY_DSN, VERSION } from 'settings';
 
 sentry.init({
   dsn: SENTRY_DSN,
@@ -18,8 +19,11 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(ApplicationModule);
   const { httpAdapter } = app.get(HttpAdapterHost);
 
-  app.enableCors();
+  if (IS_DEV) {
+    app.use(morgan('dev'));
+  }
 
+  app.enableCors();
   app.useGlobalPipes(new ValidationPipe({ disableErrorMessages: IS_PROD, forbidUnknownValues: true }));
   app.useGlobalFilters(new ExceptionFilter(httpAdapter));
 
