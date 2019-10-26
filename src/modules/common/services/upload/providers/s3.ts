@@ -56,6 +56,6 @@ export class S3Provider implements IUploadProvider {
     if (!path) throw new BadRequestException('provide a path to exlude');
 
     const s3 = new aws.S3({ params: { Bucket: this.bucket } });
-    await s3.deleteObject({ Bucket: this.bucket, Key: path }).promise;
+    await s3.deleteObject({ Bucket: this.bucket, Key: path }).promise();
   }
 }

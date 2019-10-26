@@ -20,7 +20,7 @@ export async function seed(knex: Knex): Promise<void> {
     const user: IUser = {
       firstName,
       lastName,
-      email: faker.internet.email(`${lastName}_${x}`, firstName),
+      email: faker.internet.email(`${lastName}_${x}`, firstName).toLowerCase(),
       password: '$2b$11$Ht0vFtWZHNh0nOlFr1iLUu2/.p//LlghbIxzckI1bmFjVNDn78tKm', //senha@123
       roles: 'user' as any,
       createdDate: new Date(),
