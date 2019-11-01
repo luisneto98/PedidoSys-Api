@@ -38,6 +38,10 @@ export const AUTH = {
   ).toString('utf8')
 };
 
+if (!['aws', 'mailgun', 'file'].includes(process.env.MAIL_PROVIDER)) {
+  throw new Error(`INVALID MAIL_PROVIDER: ${process.env.MAIL_PROVIDER}`);
+}
+
 export const MAIL = {
   provider: process.env.MAIL_PROVIDER as MailProvider,
   from: process.env.MAIL_FROM,
@@ -51,6 +55,10 @@ export const MAIL = {
     region: process.env.AWS_REGION
   }
 };
+
+if (!['local', 's3'].includes(process.env.UPLOAD_PROVIDER)) {
+  throw new Error(`INVALID UPLOAD_PROVIDER: ${process.env.UPLOAD_PROVIDER}`);
+}
 
 export const UPLOAD = {
   provider: process.env.UPLOAD_PROVIDER as UploadProvider,

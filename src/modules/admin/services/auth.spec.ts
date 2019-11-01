@@ -59,54 +59,6 @@ describe('Admin/AuthService', () => {
     }
   });
 
-  it('should return token for a valid user when try to login by social', async () => {
-    jest.spyOn(userRepository, 'findBySocial').mockResolvedValueOnce({ id: 1 } as any);
-    jest.spyOn(tokenService, 'generateAccessToken').mockResolvedValueOnce('app_access_token');
-
-    const result = await service.loginBySocial({ id: '1', provider: 'google' } as any);
-
-    expect(result).not.toBeFalsy();
-    expect(result).toEqual('app_access_token');
-  });
-
-  it('should create a userSocial and return token for user when try to login by social', async () => {
-    jest.spyOn(userRepository, 'findBySocial').mockResolvedValueOnce(null);
-    jest.spyOn(userRepository, 'findByEmail').mockResolvedValueOnce({ id: 1, socials: [] } as any);
-    jest.spyOn(userRepository, 'insertSocial').mockResolvedValueOnce(null);
-    jest.spyOn(tokenService, 'generateAccessToken').mockResolvedValueOnce('app_access_token');
-
-    const result = await service.loginBySocial({ id: '1', provider: 'google', email: 'test@email.com' } as any);
-
-    expect(result).not.toBeFalsy();
-    expect(result).toEqual('app_access_token');
-  });
-
-  it('should update a userSocial and return token for user when try to login by social', async () => {
-    jest.spyOn(userRepository, 'findBySocial').mockResolvedValueOnce(null);
-    jest
-      .spyOn(userRepository, 'findByEmail')
-      .mockResolvedValueOnce({ id: 1, socials: [{ provider: 'google' }] } as any);
-    jest.spyOn(userRepository, 'updateSocial').mockResolvedValueOnce({} as any);
-    jest.spyOn(tokenService, 'generateAccessToken').mockResolvedValueOnce('app_access_token');
-
-    const result = await service.loginBySocial({ id: '1', provider: 'google', email: 'test@email.com' } as any);
-
-    expect(result).not.toBeFalsy();
-    expect(result).toEqual('app_access_token');
-  });
-
-  it('should throw NotFoundException when try to login by social with email', async () => {
-    try {
-      jest.spyOn(userRepository, 'findBySocial').mockResolvedValueOnce(null);
-      jest.spyOn(userRepository, 'findByEmail').mockResolvedValueOnce(null);
-
-      await service.loginBySocial({ id: '1', provider: 'google', email: 'test@email.com' } as any);
-      fail();
-    } catch (err) {
-      expect(err).toBeInstanceOf(NotFoundException);
-    }
-  });
-
   it('should return user when try to change password', async () => {
     jest.spyOn(userRepository, 'findById').mockResolvedValueOnce({ id: 1, password: '123@senha' } as any);
     jest.spyOn(userRepository, 'update').mockImplementationOnce(model => Promise.resolve(model as any));

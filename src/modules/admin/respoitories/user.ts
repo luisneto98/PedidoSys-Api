@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { enRoles, IUser } from 'interfaces/models/user';
-import { IUserSocial } from 'interfaces/models/userSocial';
 import { IPaginationParams } from 'interfaces/pagination';
 import { User } from 'modules/database/models/user';
-import { UserSocial } from 'modules/database/models/userSocial';
 import { Page, Transaction } from 'objection';
 
 @Injectable()
@@ -68,16 +66,6 @@ export class UserRepository {
       .first();
   }
 
-  public async findBySocial(socialId: string, type: string): Promise<User> {
-    return User.query()
-      .eager('[socials]')
-      .select('User.*')
-      .join('UserSocial', 'UserSocial.userId', 'User.id')
-      .where('UserSocial.ref', '=', socialId)
-      .andWhere('UserSocial.provider', '=', type)
-      .first();
-  }
-
   public async insert(model: IUser, transaction?: Transaction): Promise<User> {
     return User.query(transaction).insert(model);
   }
@@ -90,19 +78,5 @@ export class UserRepository {
     await User.query(transaction)
       .del()
       .where({ id });
-  }
-
-  public async insertSocial(model: IUserSocial): Promise<UserSocial> {
-    return UserSocial.query()
-      .insert(model)
-      .returning('*')
-      .first();
-  }
-
-  public async updateSocial(model: IUserSocial): Promise<IUserSocial> {
-    return UserSocial.query()
-      .patch(model)
-      .where({ userId: model.userId, provider: model.provider })
-      .then(() => model);
   }
 }

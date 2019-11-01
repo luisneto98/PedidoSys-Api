@@ -3,7 +3,6 @@ import { enRoles, IUser } from 'interfaces/models/user';
 import { Model } from 'objection';
 
 import { UserDevice } from './userDevice';
-import { UserSocial } from './userSocial';
 
 export class User extends Model implements IUser {
   @ApiModelProperty({ type: 'integer' })
@@ -25,8 +24,6 @@ export class User extends Model implements IUser {
 
   // @ApiModelProperty({ nullable: true, type: [UserDevice] })
   public devices?: UserDevice[];
-  // @ApiModelProperty({ nullable: true, type: [UserSocial] })
-  public socials?: UserSocial[];
 
   public get fullName(): string {
     return `${this.firstName} ${this.lastName}`.trim();
@@ -44,15 +41,6 @@ export class User extends Model implements IUser {
         join: {
           from: 'User.id',
           to: 'UserDevice.userId'
-        }
-      },
-
-      socials: {
-        relation: Model.HasManyRelation,
-        modelClass: UserSocial,
-        join: {
-          from: 'User.id',
-          to: 'UserSocial.userId'
         }
       }
     };

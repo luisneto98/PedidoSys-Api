@@ -1,6 +1,4 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { IUserSocial } from 'interfaces/models/userSocial';
-import { ISocialUserInfo } from 'interfaces/socialUserInfo';
 import { ICurrentUser } from 'interfaces/tokens/currentUser';
 import { IResetPasswordToken } from 'interfaces/tokens/resetPassword';
 import { IMail, MailService } from 'modules/common/services/mail';
@@ -28,17 +26,6 @@ export class AuthService {
     const isValid = await this.passwordService.compare(user.password, password);
     if (!isValid) throw new BadRequestException();
 
-    return this.tokenService.generateAccessToken(user);
-  }
-
-  public async loginBySocial(socialUser: ISocialUserInfo): Promise<string> {
-    let user = await this.userRepository.findBySocial(socialUser.id, socialUser.provider);
-
-    if (!user && socialUser.email) {
-      user = await this.userSocialByEmail(socialUser);
-    }
-
-    if (!user) throw new NotFoundException();
     return this.tokenService.generateAccessToken(user);
   }
 
@@ -71,34 +58,5 @@ export class AuthService {
     user.password = await this.passwordService.hash(newPassword);
 
     return this.userRepository.update(user);
-  }
-
-  private async userSocialByEmail(socialUser: ISocialUserInfo): Promise<User> {
-    const user = await this.userRepository.findByEmail(socialUser.email);
-
-    if (user) {
-      await this.associateUserSocial(user, {
-        userId: user.id,
-        ref: socialUser.id,
-        provider: socialUser.provider
-      });
-    }
-
-    return user;
-  }
-
-  private async associateUserSocial(user: User, social: IUserSocial): Promise<User> {
-    let userSocial = user.socials.filter(s => s.provider === social.provider)[0];
-
-    if (userSocial) {
-      social = await this.userRepository.updateSocial(social);
-      userSocial.ref = social.ref;
-      return user;
-    }
-
-    social = await this.userRepository.insertSocial(social);
-    user.socials.push(<any>social);
-
-    return user;
   }
 }

@@ -11,6 +11,7 @@
     "noImplicitAny": true,
     "noEmitOnError": true,
     "noUnusedLocals": true,
+    "skipLibCheck": true,
     "importHelpers": true,
     "inlineSources": true,
     "alwaysStrict": true,

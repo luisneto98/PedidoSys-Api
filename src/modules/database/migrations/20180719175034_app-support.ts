@@ -17,24 +17,8 @@ export async function up(knex: Knex): Promise<void> {
 
     table.primary(['userId', 'deviceId']);
   });
-
-  await knex.schema.createTable('UserSocial', table => {
-    table
-      .integer('userId')
-      .notNullable()
-      .unsigned()
-      .references('id')
-      .inTable('User')
-      .onDelete('CASCADE');
-
-    table.string('ref').notNullable();
-    table.string('provider').notNullable();
-
-    table.primary(['userId', 'provider']);
-  });
 }
 
 export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTable('UserDevice');
-  await knex.schema.dropTable('UserSocial');
 }
