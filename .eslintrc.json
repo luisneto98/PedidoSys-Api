@@ -7,7 +7,6 @@
   ],
   "parserOptions": {
     "ecmaVersion": 10,
-    "project": "tsconfig.dev.json",
     "sourceType": "module",
     "ecmaFeatures": {
       "modules": true
@@ -40,7 +39,6 @@
       "properties": "always"
     }],
     "@typescript-eslint/no-unused-vars": ["warn"],
-    "@typescript-eslint/await-thenable": ["error"],
     "@typescript-eslint/adjacent-overload-signatures": ["error"],
     "@typescript-eslint/interface-name-prefix": ["error", "always"],
     "@typescript-eslint/explicit-member-accessibility": ["error", {

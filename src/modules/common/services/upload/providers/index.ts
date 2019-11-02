@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { UPLOAD } from 'settings';
 
 import { LocalProvider } from './local';

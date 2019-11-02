@@ -6,7 +6,6 @@ import { IResetPasswordToken } from 'interfaces/tokens/resetPassword';
 import * as jwt from 'jsonwebtoken';
 import cloneDeep from 'lodash/cloneDeep';
 import { AUTH } from 'settings';
-import uuid from 'uuid/v4';
 
 export enum enTokenType {
   accessToken = 0,
@@ -28,8 +27,8 @@ export class TokenService {
     return this.sign(tokenData, enTokenType.accessToken, timeout || (forApp ? AUTH.appTimeout : AUTH.timeout));
   }
 
-  public async generateRefreshToken(userId: number, deviceId: string): Promise<string> {
-    const tokenData: IRefreshToken = { userId, deviceId, uuid: uuid() };
+  public async generateRefreshToken(userId: number, deviceId: string, uuid: string): Promise<string> {
+    const tokenData: IRefreshToken = { userId, deviceId, uuid };
     return this.sign(tokenData, enTokenType.refreshToken);
   }
 

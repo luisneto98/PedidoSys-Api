@@ -1,8 +1,8 @@
 import { IUser } from './user';
 
-export interface IUserDevice {
-  deviceId: string;
-  userId: number;
+export interface IDevice {
+  id: string;
+  userId?: number;
   name: string;
   currentToken: string;
   notificationToken?: string;

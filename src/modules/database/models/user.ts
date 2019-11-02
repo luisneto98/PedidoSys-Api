@@ -2,7 +2,7 @@ import { ApiModelProperty } from '@nestjs/swagger';
 import { enRoles, IUser } from 'interfaces/models/user';
 import { Model } from 'objection';
 
-import { UserDevice } from './userDevice';
+import { Device } from './device';
 
 export class User extends Model implements IUser {
   @ApiModelProperty({ type: 'integer' })
@@ -16,15 +16,15 @@ export class User extends Model implements IUser {
   public password: string;
   @ApiModelProperty({ type: ['string'] })
   public roles: enRoles[];
-
   @ApiModelProperty({ type: 'string', format: 'date-time' })
   public createdDate: Date;
   @ApiModelProperty({ type: 'string', format: 'date-time' })
   public updatedDate: Date;
 
-  // @ApiModelProperty({ nullable: true, type: [UserDevice] })
-  public devices?: UserDevice[];
+  @ApiModelProperty({ nullable: true })
+  public devices?: Device[];
 
+  @ApiModelProperty({ type: 'string' })
   public get fullName(): string {
     return `${this.firstName} ${this.lastName}`.trim();
   }
@@ -37,10 +37,10 @@ export class User extends Model implements IUser {
     return {
       devices: {
         relation: Model.HasManyRelation,
-        modelClass: UserDevice,
+        modelClass: Device,
         join: {
           from: 'User.id',
-          to: 'UserDevice.userId'
+          to: 'Device.userId'
         }
       }
     };
@@ -70,8 +70,6 @@ export class User extends Model implements IUser {
 
   public $parseDatabaseJson(json: any): any {
     json.roles = json.roles ? json.roles.split(',') : [];
-    json.createdDate = json.createdDate ? new Date(json.createdDate) : null;
-    json.updatedDate = json.updatedDate ? new Date(json.updatedDate) : null;
     return Model.prototype.$formatDatabaseJson.call(this, json);
   }
 

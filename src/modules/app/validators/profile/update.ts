@@ -1,19 +1,8 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import {
-  IsArray,
-  IsEmail,
-  IsIn,
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  MaxLength,
-  Min,
-  MinLength
-} from 'class-validator';
-import { enRoles, IUser, listPublicRoles } from 'interfaces/models/user';
+import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min, MinLength } from 'class-validator';
+import { IUser } from 'interfaces/models/user';
 
-export class SaveValidator implements IUser {
+export class UpdateValidator implements IUser {
   @IsOptional()
   @IsInt()
   @Min(0)
@@ -38,10 +27,4 @@ export class SaveValidator implements IUser {
   @MaxLength(150)
   @ApiModelProperty({ required: true, type: 'string', maxLength: 150 })
   public email: string;
-
-  @IsNotEmpty()
-  @IsArray()
-  @IsIn(listPublicRoles(), { each: true })
-  @ApiModelProperty({ required: true, enum: listPublicRoles(), isArray: true })
-  public roles: enRoles[];
 }

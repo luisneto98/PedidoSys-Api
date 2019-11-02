@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 import { HttpService, Injectable } from '@nestjs/common';
-import { UserDevice } from 'modules/database/models/userDevice';
+import { Device } from 'modules/database/models/device';
 import { FIREBASE_KEY } from 'settings';
 
 @Injectable()
@@ -8,7 +8,7 @@ export class NotificationService {
   constructor(private http: HttpService) {}
 
   public async sendToUser(userId: number, title: string, body: string, payload: any): Promise<any> {
-    const devices = await UserDevice.query()
+    const devices = await Device.query()
       .where({ userId })
       .whereNotNull('notificationToken');
 

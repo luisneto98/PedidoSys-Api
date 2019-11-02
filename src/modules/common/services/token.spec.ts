@@ -79,7 +79,7 @@ describe('Admin/TokenService', () => {
   });
 
   it('should generate refresh token', async () => {
-    const token = await service.generateRefreshToken(1, '1');
+    const token = await service.generateRefreshToken(1, '1', '1');
     expect(token).toBeString();
 
     return expect(service.verify(token, enTokenType.refreshToken)).toResolve();
