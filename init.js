@@ -71,7 +71,7 @@ async function askParams(answers = {}) {
 
   return {
     ...params,
-    slug: lodash.kebabCase(i.endsWith('-api') ? i : `${i}-api`).toLowerCase()
+    slug: lodash.kebabCase(params.project.endsWith('-api') ? params.project : `${params.project}-api`).toLowerCase()
   };
 }
 
@@ -110,7 +110,7 @@ async function cleanup(params) {
     }
   ]);
 
-  await replaceContent('./index.ts', [
+  await replaceContent('./src/index.ts', [
     {
       from: 'Wa Project API',
       to: params.project
