@@ -1,12 +1,12 @@
-/* eslint-disable max-len */
 import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import { enRoles, IUser } from 'interfaces/models/user';
 import { MailService } from 'modules/common/services/mail';
 import { PasswordService } from 'modules/common/services/password';
 
-import { UserRepository } from '../respoitories/user';
+import { UserRepository } from '../repositories/user';
 import { UserService } from './user';
 
+/* eslint-disable max-len */
 describe('Admin/UserService', () => {
   let mailService: MailService;
   let userRepository: UserRepository;

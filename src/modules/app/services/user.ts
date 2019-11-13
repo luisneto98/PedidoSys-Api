@@ -3,7 +3,7 @@ import { IUser } from 'interfaces/models/user';
 import { ICurrentUser } from 'interfaces/tokens/currentUser';
 import { User } from 'modules/database/models/user';
 
-import { UserRepository } from '../respoitories/user';
+import { UserRepository } from '../repositories/user';
 
 @Injectable()
 export class UserService {

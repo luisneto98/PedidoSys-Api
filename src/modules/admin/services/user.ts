@@ -5,7 +5,7 @@ import { MailService } from 'modules/common/services/mail';
 import { PasswordService } from 'modules/common/services/password';
 import { User } from 'modules/database/models/user';
 
-import { UserRepository } from '../respoitories/user';
+import { UserRepository } from '../repositories/user';
 
 @Injectable()
 export class UserService {

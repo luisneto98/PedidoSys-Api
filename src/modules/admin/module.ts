@@ -6,7 +6,7 @@ import { AuthController } from './controllers/auth';
 import { TestController } from './controllers/test';
 import { UserController } from './controllers/user';
 import { RenewTokenMiddleware } from './middlewares/renewToken';
-import { UserRepository } from './respoitories/user';
+import { UserRepository } from './repositories/user';
 import { AuthService } from './services/auth';
 import { UserService } from './services/user';
 

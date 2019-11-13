@@ -4,7 +4,7 @@ import { PasswordService } from 'modules/common/services/password';
 import { TokenService } from 'modules/common/services/token';
 import { UrlService } from 'modules/common/services/url';
 
-import { UserRepository } from '../respoitories/user';
+import { UserRepository } from '../repositories/user';
 import { AuthService } from './auth';
 
 describe('Admin/AuthService', () => {

@@ -6,8 +6,8 @@ import { enTokenType, TokenService } from 'modules/common/services/token';
 import { Device } from 'modules/database/models/device';
 import uuid from 'uuid/v4';
 
-import { DeviceRepository } from '../respoitories/device';
-import { UserRepository } from '../respoitories/user';
+import { DeviceRepository } from '../repositories/device';
+import { UserRepository } from '../repositories/user';
 import { LoginValidator } from '../validators/auth/login';
 
 @Injectable()

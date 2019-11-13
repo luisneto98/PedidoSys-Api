@@ -5,7 +5,7 @@ import { ICurrentUser } from 'interfaces/tokens/currentUser';
 import { AuthRequired, CurrentUser } from 'modules/common/guards/token';
 import { User } from 'modules/database/models/user';
 
-import { UserRepository } from '../respoitories/user';
+import { UserRepository } from '../repositories/user';
 import { UserService } from '../services/user';
 import { ListValidator } from '../validators/user/list';
 import { SaveValidator } from '../validators/user/save';

@@ -14,7 +14,13 @@ export class NotificationService {
 
     if (!devices.length) return;
 
-    return this.send(title, body, { userId, ...payload }, null, devices.map(d => d.notificationToken));
+    return this.send(
+      title,
+      body,
+      { userId, ...payload },
+      null,
+      devices.map(d => d.notificationToken)
+    );
   }
 
   public async sendToAll(title: string, body: string, payload: any): Promise<any> {

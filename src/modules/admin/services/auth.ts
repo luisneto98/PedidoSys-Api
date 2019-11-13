@@ -7,7 +7,7 @@ import { enTokenType, TokenService } from 'modules/common/services/token';
 import { UrlService } from 'modules/common/services/url';
 import { User } from 'modules/database/models/user';
 
-import { UserRepository } from '../respoitories/user';
+import { UserRepository } from '../repositories/user';
 
 @Injectable()
 export class AuthService {
