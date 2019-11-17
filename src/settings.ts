@@ -38,7 +38,7 @@ export const AUTH = {
   ).toString('utf8')
 };
 
-if (!['aws', 'mailgun', 'file'].includes(process.env.MAIL_PROVIDER)) {
+if (NODE_ENV !== 'test' && !['aws', 'mailgun', 'file'].includes(process.env.MAIL_PROVIDER)) {
   throw new Error(`INVALID MAIL_PROVIDER: ${process.env.MAIL_PROVIDER}`);
 }
 
@@ -56,7 +56,7 @@ export const MAIL = {
   }
 };
 
-if (!['local', 's3'].includes(process.env.UPLOAD_PROVIDER)) {
+if (NODE_ENV !== 'test' && !['local', 's3'].includes(process.env.UPLOAD_PROVIDER)) {
   throw new Error(`INVALID UPLOAD_PROVIDER: ${process.env.UPLOAD_PROVIDER}`);
 }
 
@@ -73,11 +73,13 @@ export const UPLOAD = {
   }
 };
 
-console.table({
-  NODE_ENV,
-  MAIL_PROVIDER: MAIL.provider,
-  UPLOAD_PROVIDER: UPLOAD.provider,
-  SENTRY_ENABLED: !!SENTRY_DSN,
-  API_DNS,
-  APP_DNS
-});
+if (NODE_ENV !== 'test') {
+  console.table({
+    NODE_ENV,
+    MAIL_PROVIDER: MAIL.provider,
+    UPLOAD_PROVIDER: UPLOAD.provider,
+    SENTRY_ENABLED: !!SENTRY_DSN,
+    API_DNS,
+    APP_DNS
+  });
+}
