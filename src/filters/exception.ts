@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, HttpException, HttpStatus } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import * as sentry from '@sentry/node';
-import { ICurrentUser } from 'interfaces/tokens/currentUser';
+import { ICurrentUser } from 'modules/common/interfaces/currentUser';
 import { IS_DEV, NODE_ENV, SENTRY_DSN } from 'settings';
 
 sentry.init({

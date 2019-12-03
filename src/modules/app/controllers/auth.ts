@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
-import { ICurrentUser } from 'interfaces/tokens/currentUser';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthRequired, CurrentUser } from 'modules/common/guards/token';
+import { ICurrentUser } from 'modules/common/interfaces/currentUser';
 
 import { AuthService } from '../services/auth';
 import { LoginValidator } from '../validators/auth/login';
@@ -9,7 +9,7 @@ import { LogoutValidator } from '../validators/auth/logout';
 import { OpenedValidator } from '../validators/auth/opened';
 import { RefreshValidator } from '../validators/auth/refresh';
 
-@ApiUseTags('Auth')
+@ApiTags('Auth')
 @Controller('/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

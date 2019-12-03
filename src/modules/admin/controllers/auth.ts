@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
-import { ICurrentUser } from 'interfaces/tokens/currentUser';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthRequired, CurrentUser } from 'modules/common/guards/token';
+import { ICurrentUser } from 'modules/common/interfaces/currentUser';
 
 import { AuthService } from '../services/auth';
 import { ChangePasswordValidator } from '../validators/auth/changePassword';
@@ -9,7 +9,7 @@ import { LoginValidator } from '../validators/auth/login';
 import { ResetPasswordValidator } from '../validators/auth/resetPassword';
 import { SendResetValidator } from '../validators/auth/sendReset';
 
-@ApiUseTags('Admin: Auth')
+@ApiTags('Admin: Auth')
 @Controller('/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

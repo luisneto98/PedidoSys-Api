@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { enRoles, IUser } from 'interfaces/models/user';
+import { enRoles, IUser } from 'modules/database/interfaces/user';
 
 import { enTokenType, TokenService } from './token';
 

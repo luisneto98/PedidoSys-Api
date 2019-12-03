@@ -1,14 +1,14 @@
 import { Body, Controller, Get, NotFoundException, Post } from '@nestjs/common';
-import { ApiResponse, ApiUseTags } from '@nestjs/swagger';
-import { ICurrentUser } from 'interfaces/tokens/currentUser';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthRequired, CurrentUser } from 'modules/common/guards/token';
+import { ICurrentUser } from 'modules/common/interfaces/currentUser';
 import { User } from 'modules/database/models/user';
 
 import { UserRepository } from '../repositories/user';
 import { UserService } from '../services/user';
 import { UpdateValidator } from '../validators/profile/update';
 
-@ApiUseTags('App: Profile')
+@ApiTags('App: Profile')
 @Controller('/profile')
 @AuthRequired()
 export class ProfileController {

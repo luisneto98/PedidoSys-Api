@@ -62,11 +62,11 @@ Suporte para: Postgres, MSSQL, MySQL, MariaDB, SQLite3, Oracle e Amazon Redshift
 * Knex é responsável por montrar as queries
 * Objection é um ORM, ele traz mais funcionalidades para controlar melhor as tabelas.
 
-Para  criar uma **migration** nova basta criar um arquivo na pasta src/migrations no padrão:
-*'datacompleta_nome.ts'* (ex. 20180616235034_user.ts), seguindo o padrão dos arquivos existentes. 
+Para  criar uma **migration** nova basta rodar o comando: *yarn migration:make*
+Para criar um **seed** basta basta rodar o comando: *yarn seed:make*
 
-Para criar um **seed** basta criar um arquivo na pasta src/migrations/seed com o nome: 
 *'número-proposito.ts'* (ex. 1-user.ts), o número ser apenas para ele rodar na sequência correta.
+
 **CUIDADO:** OS SEEDS RODAM TODA A VEZ QUE O BANCO LEVANTA, ENTÃO É IMPORTANTE VERIFICAR SE OS DADOS 
 DESTE SEED JÁ FORAM COLOCADOS.
 
@@ -76,8 +76,3 @@ Para mais informações veja a documentação do
 
 Os dados do banco ficam salvos na pasta **.data**, caso seja necessário, basta para o docker,
 apagar essa pasta e levantar o docker novamente.
-
-### Emails
-
-Todo o email enviado durante o desenvolvimento não será enviado de fato,
-mas uma copia do html gerado ficará na pasta *output-emails*

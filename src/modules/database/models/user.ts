@@ -1,30 +1,30 @@
-import { ApiModelProperty } from '@nestjs/swagger';
-import { enRoles, IUser } from 'interfaces/models/user';
+import { ApiProperty } from '@nestjs/swagger';
 import { Model } from 'objection';
 
+import { enRoles, IUser } from '../interfaces/user';
 import { Device } from './device';
 
 export class User extends Model implements IUser {
-  @ApiModelProperty({ type: 'integer' })
+  @ApiProperty({ type: 'integer' })
   public id: number;
-  @ApiModelProperty({ type: 'string' })
+  @ApiProperty({ type: 'string' })
   public firstName: string;
-  @ApiModelProperty({ type: 'string' })
+  @ApiProperty({ type: 'string' })
   public lastName: string;
-  @ApiModelProperty({ type: 'string' })
+  @ApiProperty({ type: 'string' })
   public email: string;
   public password: string;
-  @ApiModelProperty({ type: ['string'] })
+  @ApiProperty({ type: 'string', isArray: true })
   public roles: enRoles[];
-  @ApiModelProperty({ type: 'string', format: 'date-time' })
+  @ApiProperty({ type: 'string', format: 'date-time' })
   public createdDate: Date;
-  @ApiModelProperty({ type: 'string', format: 'date-time' })
+  @ApiProperty({ type: 'string', format: 'date-time' })
   public updatedDate: Date;
 
-  @ApiModelProperty({ nullable: true })
+  @ApiProperty({ nullable: true })
   public devices?: Device[];
 
-  @ApiModelProperty({ type: 'string' })
+  @ApiProperty({ type: 'string' })
   public get fullName(): string {
     return `${this.firstName} ${this.lastName}`.trim();
   }

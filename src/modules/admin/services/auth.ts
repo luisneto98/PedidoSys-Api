@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { ICurrentUser } from 'interfaces/tokens/currentUser';
-import { IResetPasswordToken } from 'interfaces/tokens/resetPassword';
+import { ICurrentUser } from 'modules/common/interfaces/currentUser';
+import { IResetPasswordToken } from 'modules/common/interfaces/resetPassword';
 import { IMail, MailService } from 'modules/common/services/mail';
 import { PasswordService } from 'modules/common/services/password';
 import { enTokenType, TokenService } from 'modules/common/services/token';

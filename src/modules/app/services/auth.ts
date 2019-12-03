@@ -1,8 +1,8 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { IDevice } from 'interfaces/models/device';
-import { ICurrentUser } from 'interfaces/tokens/currentUser';
+import { ICurrentUser } from 'modules/common/interfaces/currentUser';
 import { PasswordService } from 'modules/common/services/password';
 import { enTokenType, TokenService } from 'modules/common/services/token';
+import { IDevice } from 'modules/database/interfaces/device';
 import { Device } from 'modules/database/models/device';
 import uuid from 'uuid/v4';
 

@@ -31,7 +31,7 @@ async function bootstrap(): Promise<void> {
     .setTitle('Wa Project API')
     .setDescription('Wa Project API')
     .setVersion(`1.${VERSION}`)
-    .addBearerAuth('Authorization', 'header')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerOptions);

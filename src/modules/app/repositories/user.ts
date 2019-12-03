@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IUser } from 'interfaces/models/user';
+import { IUser } from 'modules/database/interfaces/user';
 import { User } from 'modules/database/models/user';
 import { Transaction } from 'objection';
 

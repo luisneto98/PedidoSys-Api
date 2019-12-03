@@ -1,23 +1,23 @@
-import { ApiModelProperty } from '@nestjs/swagger';
-import { IDevice } from 'interfaces/models/device';
+import { ApiProperty } from '@nestjs/swagger';
 import { Model } from 'objection';
 
+import { IDevice } from '../interfaces/device';
 import { User } from './user';
 
 export class Device extends Model implements IDevice {
-  @ApiModelProperty({ type: 'string' })
+  @ApiProperty({ type: 'string' })
   public id: string;
-  @ApiModelProperty({ type: 'integer' })
+  @ApiProperty({ type: 'integer' })
   public userId?: number;
-  @ApiModelProperty({ type: 'string' })
+  @ApiProperty({ type: 'string' })
   public name: string;
-  @ApiModelProperty({ type: 'string' })
+  @ApiProperty({ type: 'string' })
   public currentToken: string;
-  @ApiModelProperty({ type: 'string' })
+  @ApiProperty({ type: 'string' })
   public notificationToken?: string;
-  @ApiModelProperty({ type: 'string', format: 'date-time' })
+  @ApiProperty({ type: 'string', format: 'date-time' })
   public createdDate: Date;
-  @ApiModelProperty({ type: 'string', format: 'date-time' })
+  @ApiProperty({ type: 'string', format: 'date-time' })
   public updatedDate: Date;
 
   public user: User;

@@ -1,8 +1,8 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { enRoles, IUser, listPublicRoles } from 'interfaces/models/user';
-import { ICurrentUser } from 'interfaces/tokens/currentUser';
+import { ICurrentUser } from 'modules/common/interfaces/currentUser';
 import { MailService } from 'modules/common/services/mail';
 import { PasswordService } from 'modules/common/services/password';
+import { enRoles, IUser, listPublicRoles } from 'modules/database/interfaces/user';
 import { User } from 'modules/database/models/user';
 
 import { UserRepository } from '../repositories/user';

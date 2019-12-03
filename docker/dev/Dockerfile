@@ -10,4 +10,4 @@ WORKDIR /server
 EXPOSE 5000
 EXPOSE 9229
 
-CMD yarn start:dev
+CMD yarn dev

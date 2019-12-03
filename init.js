@@ -116,6 +116,8 @@ async function cleanup(params) {
       to: params.project
     }
   ]);
+
+  fs.copyFileSync('./.env.example', './.env');
 }
 
 async function replaceContent(file, replacers) {

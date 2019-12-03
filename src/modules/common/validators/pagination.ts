@@ -1,31 +1,31 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsIn, IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
 
 export abstract class PaginationValidator {
   @IsString()
   @IsOptional()
-  @ApiModelProperty({ required: false, type: String })
+  @ApiProperty({ required: false, type: String })
   public term: string;
 
   @IsNotEmpty()
   @IsInt()
   @Min(0)
   @Type(() => Number)
-  @ApiModelProperty({ required: true, type: Number, minimum: 0 })
+  @ApiProperty({ required: true, type: Number, minimum: 0 })
   public page: number;
 
   @IsNotEmpty()
   @IsInt()
   @Min(1)
   @Type(() => Number)
-  @ApiModelProperty({ required: true, type: Number, minimum: 1 })
+  @ApiProperty({ required: true, type: Number, minimum: 1 })
   public pageSize: number;
 
   @IsString()
   @IsOptional()
   @IsIn(['asc', 'desc', null, undefined])
-  @ApiModelProperty({ required: false, enum: ['asc', 'desc'] })
+  @ApiProperty({ required: false, enum: ['asc', 'desc'] })
   public orderDirection: 'asc' | 'desc';
 
   public abstract orderBy: string;

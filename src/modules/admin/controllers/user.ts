@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
-import { ApiResponse, ApiUseTags } from '@nestjs/swagger';
-import { enRoles, listPublicRoles } from 'interfaces/models/user';
-import { ICurrentUser } from 'interfaces/tokens/currentUser';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthRequired, CurrentUser } from 'modules/common/guards/token';
+import { ICurrentUser } from 'modules/common/interfaces/currentUser';
+import { enRoles, listPublicRoles } from 'modules/database/interfaces/user';
 import { User } from 'modules/database/models/user';
 
 import { UserRepository } from '../repositories/user';
@@ -10,7 +10,7 @@ import { UserService } from '../services/user';
 import { ListValidator } from '../validators/user/list';
 import { SaveValidator } from '../validators/user/save';
 
-@ApiUseTags('Admin: User')
+@ApiTags('Admin: User')
 @Controller('/user')
 @AuthRequired([enRoles.admin])
 export class UserController {
@@ -23,7 +23,7 @@ export class UserController {
   }
 
   @Get('roles')
-  @ApiResponse({ status: 200, type: ['string'] })
+  @ApiResponse({ status: 200, type: 'string', isArray: true })
   public async roles() {
     const roles = listPublicRoles();
     const rolesDescriptions: any = {

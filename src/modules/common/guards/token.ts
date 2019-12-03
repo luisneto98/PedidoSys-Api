@@ -8,8 +8,9 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { enRoles } from 'interfaces/models/user';
-import { ICurrentUser } from 'interfaces/tokens/currentUser';
+import { enRoles } from 'modules/database/interfaces/user';
+
+import { ICurrentUser } from '../interfaces/currentUser';
 
 @Injectable()
 export class TokenGuard implements CanActivate {

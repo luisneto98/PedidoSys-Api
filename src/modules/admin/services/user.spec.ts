@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
-import { enRoles, IUser } from 'interfaces/models/user';
 import { MailService } from 'modules/common/services/mail';
 import { PasswordService } from 'modules/common/services/password';
+import { enRoles, IUser } from 'modules/database/interfaces/user';
 
 import { UserRepository } from '../repositories/user';
 import { UserService } from './user';

@@ -1,12 +1,12 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
 export class RefreshValidator {
   @IsNotEmpty()
-  @ApiModelProperty({ required: true })
+  @ApiProperty({ required: true })
   public refreshToken: string;
 
   @IsNotEmpty()
-  @ApiModelProperty({ required: true })
+  @ApiProperty({ required: true })
   public deviceId: string;
 }

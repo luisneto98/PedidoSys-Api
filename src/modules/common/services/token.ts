@@ -1,11 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { IUser } from 'interfaces/models/user';
-import { ICurrentUser } from 'interfaces/tokens/currentUser';
-import { IRefreshToken } from 'interfaces/tokens/refreshToken';
-import { IResetPasswordToken } from 'interfaces/tokens/resetPassword';
 import * as jwt from 'jsonwebtoken';
 import cloneDeep from 'lodash/cloneDeep';
+import { IUser } from 'modules/database/interfaces/user';
 import { AUTH } from 'settings';
+
+import { ICurrentUser } from '../interfaces/currentUser';
+import { IRefreshToken } from '../interfaces/refreshToken';
+import { IResetPasswordToken } from '../interfaces/resetPassword';
 
 export enum enTokenType {
   accessToken = 0,

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IDevice } from 'interfaces/models/device';
+import { IDevice } from 'modules/database/interfaces/device';
 import { Device } from 'modules/database/models/device';
 import { Transaction } from 'objection';
 
