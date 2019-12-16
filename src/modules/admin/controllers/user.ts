@@ -45,7 +45,7 @@ export class UserController {
     return this.userService.remove(userId, currentUser);
   }
 
-  @Post('save')
+  @Post()
   @ApiResponse({ status: 200, type: User })
   public async save(@Body() model: SaveValidator) {
     return this.userService.save(model);
