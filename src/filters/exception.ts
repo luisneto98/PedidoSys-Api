@@ -48,11 +48,6 @@ export class ExceptionFilter extends BaseExceptionFilter {
       });
     }
 
-    if (IS_DEV && !(exception instanceof HttpException)) {
-      this.applicationRef.reply(host.getArgByIndex(1), exception.stack, status);
-      return;
-    }
-
     super.catch(exception, host);
   }
 }
