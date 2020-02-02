@@ -2,17 +2,15 @@ import * as Knex from 'knex';
 
 export async function up(knex: Knex): Promise<any> {
   await knex.schema.createTable('Request', table => {
-    table
-      .string('id', 150)
-      .notNullable()
-      .primary();
+    table.increments('id').primary();
 
     table
       .integer('requesterId')
       .notNullable()
       .unsigned()
       .references('id')
-      .inTable('User');
+      .inTable('User')
+      .onDelete('CASCADE');
 
     table.string('description', 250).notNullable();
 
@@ -21,10 +19,8 @@ export async function up(knex: Knex): Promise<any> {
       .notNullable()
       .defaultTo(1);
 
-    table
-      .float('value')
-      .nullable()
-      .defaultTo(0);
+    table.float('value', 2).notNullable();
+
     table.dateTime('createdDate').notNullable();
     table.dateTime('updatedDate').notNullable();
   });
