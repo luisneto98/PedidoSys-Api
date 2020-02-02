@@ -65,7 +65,7 @@ Suporte para: Postgres, MSSQL, MySQL, MariaDB, SQLite3, Oracle e Amazon Redshift
 Para  criar uma **migration** nova basta rodar o comando: *yarn migration:make*
 Para criar um **seed** basta basta rodar o comando: *yarn seed:make*
 
-*'número-proposito.ts'* (ex. 1-user.ts), o número ser apenas para ele rodar na sequência correta.
+*'número-proposito.ts'* (ex. 1-user.ts), o número será apenas para ele rodar na sequência correta.
 
 **CUIDADO:** OS SEEDS RODAM TODA A VEZ QUE O BANCO LEVANTA, ENTÃO É IMPORTANTE VERIFICAR SE OS DADOS 
 DESTE SEED JÁ FORAM COLOCADOS.
